@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts",
+    "src/app/Logup/page.jsx",
+    "src/app/Login/page.jsx",
+    "src/app/CheckOut/page.jsx",
+    "src/Contexts/ProductsContext.jsx",
+    "src/Contexts/MenuContext.jsx",
+    "src/app/Main/page.jsx"
+, "src/app/Cart/page.jsx", "src/app/my_account/page.jsx", "src/app/shop/page.jsx", "src/components/ShowCase.jsx", "src/Contexts/AuthContext.jsx", "src/components/UpdateProfileSection.jsx", "src/components/OrderSection.jsx", "src/app/Wshlist/page.jsx", "src/Contexts/WishlistContext.jsx", "src/Contexts/CartContext.jsx", "src/components/Products.jsx", "src/Contexts/AddOrdersContext.jsx", "src/components/Swipper.jsx", "src/components/ShopingAddresSection.jsx", "src/components/NewSletter.jsx", "src/components/Navbar.jsx", "src/components/FooterBottom.jsx", "src/app/page.jsx", "src/components/ChangePasswordSection.jsx", "src/components/Footer.jsx", "src/components/G&R_Comments.jsx", "src/app/layout.jsx", "src/app/Product/[id]/page.jsx"  ],
+  "exclude": ["node_modules"]
+}

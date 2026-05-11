@@ -1,0 +1,42 @@
+[
+     {
+      "id": "1",
+      "name": "Hots",
+      "img": "/assets/images/product-5-2.jpg"
+    },
+    {
+      "id": "2",
+      "name": "T-Shirt",
+      "img": "/assets/images/product-1-1.jpg"
+    },
+    {
+      "id": "3",
+      "name": "Bags",
+      "img": "/assets/images/product-13-2.jpg"
+    },
+    {
+      "id": "4",
+      "name": "Sandel",
+      "img": "/assets/images/product-10-2.jpg"
+    },
+    {
+      "id": "5",
+      "name": "Scart Cop",
+      "img": "/assets/images/product-5-1.jpg"
+    },
+    {
+      "id": "6",
+      "name": "Shose",
+      "img": "/assets/images/product-3-1.jpg"
+    },
+    {
+      "id": "7",
+      "name": "Pillowcase",
+      "img": "/assets/images/showcase-img-2.jpg"
+    },
+    {
+      "id": "8",
+      "name": "Jumpsuit",
+      "img": "/assets/images/product-4-1.jpg"
+    }
+]

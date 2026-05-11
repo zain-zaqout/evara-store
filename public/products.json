@@ -1,0 +1,119 @@
+[
+    {
+      "id": "1",
+      "name": "Classic Cotton T-Shirt",
+      "firstImage": "/assets/images/product-1-1.jpg",
+      "lastImage": "/assets/images/product-1-2.jpg",
+      "label": "Hot",
+      "color": "#ff75a1",
+      "price": 267
+    },
+    {
+      "id": "2",
+      "name": "Slim Fit Polo Shirt",
+      "firstImage": "/assets/images/product-2-1.jpg",
+      "lastImage": "/assets/images/product-2-2.jpg",
+      "label": "New",
+      "color": "#9abcae",
+      "price": 267
+    },
+    {
+      "id": "3",
+      "name": "Urban Denim Jacket",
+      "firstImage": "/assets/images/product-3-1.jpg",
+      "lastImage": "/assets/images/product-3-2.jpg",
+      "label": "Best Sell",
+      "color": "#ffac75",
+      "price": 267
+    },
+    {
+      "id": "4",
+      "name": "Casual Linen Shirt",
+      "firstImage": "/assets/images/product-4-1.jpg",
+      "lastImage": "/assets/images/product-4-2.jpg",
+      "label": "Sale",
+      "color": "#a1cae2",
+      "price": 267
+    },
+    {
+      "id": "5",
+      "name": "Floral Summer Dress",
+      "firstImage": "/assets/images/product-5-1.jpg",
+      "lastImage": "/assets/images/product-5-2.jpg",
+      "label": "-30%",
+      "color": "#ff75a1",
+      "price": 267
+    },
+    {
+      "id": "6",
+      "name": "Relaxed Cargo Pants",
+      "firstImage": "/assets/images/product-6-1.jpg",
+      "lastImage": "/assets/images/product-6-2.jpg",
+      "label": "-22%",
+      "color": "#ff75a1",
+      "price": 267
+    },
+    {
+      "id": "7",
+      "name": "Oversized Hoodie",
+      "firstImage": "/assets/images/product-7-1.jpg",
+      "lastImage": "/assets/images/product-7-2.jpg",
+      "label": "New",
+      "color": "#9abcae",
+      "price": 267
+    },
+    {
+      "id": "8",
+      "name": "Striped Knit Sweater",
+      "firstImage": "/assets/images/product-8-1.jpg",
+      "lastImage": "/assets/images/product-8-2.jpg",
+      "label": "Best Sell",
+      "color": "#ffac75",
+      "price": 267
+    },
+    {
+      "id": "9",
+      "name": "Essential Chino Pants",
+      "firstImage": "/assets/images/product-9-1.jpg",
+      "lastImage": "/assets/images/product-9-2.jpg",
+      "label": "Hot",
+      "color": "#ff75a1",
+      "price": 267
+    },
+    {
+      "id": "91",
+      "name": "Lightweight Bomber Jacket",
+      "firstImage": "/assets/images/product-10-1.jpg",
+      "lastImage": "/assets/images/product-10-2.jpg",
+      "label": "New",
+      "color": "#9abcae",
+      "price": 267
+    },
+    {
+      "id": "92",
+      "name": "Printed Beach Shirt",
+      "firstImage": "/assets/images/product-11-1.jpg",
+      "lastImage": "/assets/images/product-11-2.jpg",
+      "label": "Best Sell",
+      "color": "#ffac75",
+      "price": 267
+    },
+    {
+      "id": "93",
+      "name": "Comfort Fit Joggers",
+      "firstImage": "/assets/images/product-12-1.jpg",
+      "lastImage": "/assets/images/product-12-2.jpg",
+      "label": "Sale",
+      "color": "#a1cae2",
+      "price": 267
+        },
+    {
+      "id": "94",
+      "name": "Premium Leather Handbag",
+      "firstImage": "/assets/images/product-13-1.jpg",
+      "lastImage": "/assets/images/product-13-2.jpg",
+      "label": "Best Sell",
+      "color": "#ff75a1",
+      "price": 267
+    }
+]
