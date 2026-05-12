@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 const Footer = () => {
   const pathname = usePathname();
   const { State } = useAuth();
-  const isAuthPage = ["/login", "/logup"].includes(pathname.toLowerCase());
+  const isAuthPage = ["/login", "signup"].includes(pathname.toLowerCase());
   if (isAuthPage) return null;
 
   return (
@@ -105,22 +105,19 @@ const Footer = () => {
             </div>
             <div className="flex flex-col gap-0.5 pt-1.5 text-gray-500 text-base">
               <p className="hover:pl-0.5 hover:text-[#088179] duration-200 block">
-                <Link href="/Login" className={`${State ? "hidden" : "block"}`}>
+                <Link href="/login" className={`${State ? "hidden" : "block"}`}>
                   <span>Sign in</span>
                 </Link>
               </p>
               <p className="hover:pl-0.5 hover:text-[#088179] duration-200 block">
-                <Link href="/Cart">
+                <Link href="/cart">
                   <span>View Cart</span>
                 </Link>
               </p>
               <p className="hover:pl-0.5 hover:text-[#088179] duration-200 block">
-                <Link href="/Wshlist">
+                <Link href="/wshlist">
                   <span>My Wishlist</span>
                 </Link>
-              </p>
-              <p className="hover:pl-0.5 hover:text-[#088179] duration-200 block">
-                <a href="#">Track My Order</a>
               </p>
               <p className="hover:pl-0.5 hover:text-[#088179] duration-200 block">
                 <a href="#">Help</a>

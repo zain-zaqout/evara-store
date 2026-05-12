@@ -11,7 +11,7 @@
 
 ## 🌐 Live Demo
 
-**[evara-store.vercel.app](https://evara-store.vercel.app)**
+**[evara-store.vercel.app](https://evara-store-two.vercel.app)**
 
 ---
 
@@ -61,7 +61,7 @@ src/
 │   ├── page.jsx             # الصفحة الرئيسية
 │   ├── shop/                # صفحة المتجر
 │   ├── Cart/                # سلة التسوق
-│   ├── Wshlist/             # قائمة الرغبات
+│   ├── wshlist/             # قائمة الرغبات
 │   ├── my_account/          # حسابي
 │   ├── Login/               # تسجيل الدخول
 │   ├── Logup/               # إنشاء حساب
@@ -93,7 +93,7 @@ src/
 
 ```bash
 # 1. استنسخ المشروع
-git clone https://github.com/username/evara-store.git
+git clone https://github.com/zain-zaqout/evara-store.git
 cd evara-store
 
 # 2. ثبّت الاعتمادات
@@ -133,7 +133,7 @@ npm run dev
 
 ### الطريقة السريعة
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/username/evara-store)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zain-zaqout/evara-store)
 
 ### يدوياً
 
@@ -161,9 +161,9 @@ vercel --prod
 | المنتج | `/product/[id]` | تفاصيل المنتج |
 | السلة | `/cart` | مراجعة السلة |
 | الرغبات | `/wshlist` | قائمة المفضلة |
-| حسابي | `/my_account` | إدارة البروفايل |
+| حسابي | `/my-account` | إدارة البروفايل |
 | الدخول | `/login` | تسجيل الدخول |
-| الاشتراك | `/logup` | إنشاء حساب جديد |
+| الاشتراك | `/signup` | إنشاء حساب جديد |
 
 ---
 
@@ -196,7 +196,7 @@ npm run lint     # فحص الأكواد
 
 **Zain**
 
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/username)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/zain-zaqout)
 
 ---
 

@@ -212,7 +212,7 @@ const Logup = () => {
                 {" "}
                 Already have an
                 <Link
-                  href="/Login"
+                  href="/login"
                   className="text-blue-500 hover:text-blue-600 underline"
                 >
                   {" "}

@@ -6,7 +6,7 @@ import { useAuth } from "../Contexts/AuthContext";
 const Sign = () => {
   const pathname = usePathname();
   const { State } = useAuth();
-  const isAuthPage = ["/login", "/logup"].includes(pathname.toLowerCase());
+  const isAuthPage = ["/login", "signup"].includes(pathname.toLowerCase());
   if (isAuthPage) return null;
 
   return (
@@ -30,7 +30,7 @@ const Sign = () => {
               </p>
             </div>
             <div>
-              <Link href="/Logup">
+              <Link href="/signup">
                 <button className="bg-gray-900 text-sm text-white font-semibold w-23 h-9 rounded-[3px] cursor-pointer select-none hover:bg-[#088179] duration-300">
                   Sign Up
                 </button>

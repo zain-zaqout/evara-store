@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 const FooterBottom = () => {
   const pathname = usePathname()
-  const isAuthPage = ["/logup","/login"].includes(pathname.toLowerCase())
+  const isAuthPage = ["signup","/login"].includes(pathname.toLowerCase())
   if (isAuthPage) return null
 
   return (

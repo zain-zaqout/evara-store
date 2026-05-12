@@ -50,7 +50,7 @@ const page = () => {
                   />
                   <div className="flex justify-center gap-2 absolute bottom-24.5 left-18 opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="group/icon relative bg-gray-200 cursor-pointer w-8 h-8 rounded-[50%] flex justify-center items-center">
-                      <Link href={`/Product/${item.id}`}>
+                      <Link href={`/product/${item.id}`}>
                         <Eye size={15} />
                       </Link>
                       <div className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-opacity">

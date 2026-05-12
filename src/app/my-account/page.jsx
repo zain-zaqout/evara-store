@@ -79,17 +79,17 @@ const MyAccount = () => {
   async function deletAccount() {
     try {
 
-      getWishlisDataForDeleted()
-      getCartDataForDeleted()
-      getReviewsDataForDeleted()
-      getOrdersDataForDeleted()
+      await getWishlisDataForDeleted()
+      await getCartDataForDeleted()
+      await getReviewsDataForDeleted()
+      await getOrdersDataForDeleted()
 
       await deleteDoc(doc(db, "users", currentUser.uid));
       await deleteUser(auth.currentUser);
 
+      router.replace("/login");
       toast.success("Your account has been deleted successfully.");
 
-      router.replace("/Login");
       setState(false);
       setCurrentUser(null);
 
@@ -133,9 +133,9 @@ const MyAccount = () => {
             onClick={() => {
               signOut(auth);
               router.replace("/");
-              setTimeout(() => {
-                location.reload();
-              }, 500);
+              setState(false);
+              setCurrentUser(null);
+              setaddressData(null);
             }}
           >
             <LogOut size={18} />
@@ -205,9 +205,7 @@ const MyAccount = () => {
               <button
                 onClick={() => {
                   setLoading(true);
-                  setTimeout(() => {
                     deletAccount();
-                  }, 2000);
                 }}
                 disabled={Loading}
                 className="inline-flex h-9 items-center justify-center rounded-md bg-red-600 w-43 text-sm font-semibold text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/40"

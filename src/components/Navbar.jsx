@@ -3,21 +3,23 @@ import Link from "next/link";
 import { useAuth } from "../Contexts/AuthContext";
 import { useMenu } from "../Contexts/MenuContext";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useCart } from "../Contexts/CartContext";
 import { useWishlist } from "../Contexts/WishlistContext";
+import { useRouter } from "next/navigation";
 
 const NavBar = () => {
   const { State } = useAuth();
   const { Menu, setMenu } = useMenu();
-  const { Items, setItems } = useCart();
-  const { wishlis, setWishlis } = useWishlist();
+  const { Items } = useCart();
+  const { wishlis } = useWishlist();
 
   const pathNAme = usePathname();
-  const isAuthPage = ["/login", "/logup"].includes(pathNAme.toLowerCase());
+  const isAuthPage = ["/login", "signup"].includes(pathNAme.toLowerCase());
   const isHome = pathNAme === "/";
   const isShop = pathNAme === "/shop";
-  const isMyAccount = pathNAme === "/my_account";
+  const isMyAccount = pathNAme === "/my-account";
+
+  const router = useRouter();
 
   if (isAuthPage) return null;
 
@@ -25,13 +27,13 @@ const NavBar = () => {
     <>
       <header className="w-full flex h-[13vh]">
         <div className="w-[80%] m-auto flex justify-between items-center">
-          <div>
+          <button onClick={() => router.push("/")} className="cursor-pointer">
             <img
               src="/assets/images/logo.svg"
               className="w-26 select-none"
               alt="LOGO"
             />
-          </div>
+          </button>
           <nav className="flex gap-5 max-[925px]:hidden">
             <Link href="/" className={`${isHome ? "text-[#088179]" : ""}`}>
               <p className="text-[17px] font-semibold hover:text-[#088179] duration-300">
@@ -43,13 +45,13 @@ const NavBar = () => {
                 Shope
               </p>
             </Link>
-            <Link href="/Login" className={`${State ? "hidden" : ""}`}>
+            <Link href="/login" className={`${State ? "hidden" : ""}`}>
               <p className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900">
                 Login
               </p>
             </Link>
             <Link
-              href="/my_account"
+              href="/my-account"
               className={`${!State ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
             >
               <p className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900">
@@ -74,7 +76,7 @@ const NavBar = () => {
               </label>
             </div>
             <div>
-              <Link href="/Wshlist">
+              <Link href="/wshlist">
                 <img
                   src="/assets/images/icon-heart.svg"
                   className="w-5 "
@@ -90,7 +92,7 @@ const NavBar = () => {
               </div>
             </div>
             <div>
-              <Link href="/Cart">
+              <Link href="/cart">
                 <img
                   src="/assets/images/icon-cart.svg"
                   className="w-[19px]"
@@ -105,14 +107,13 @@ const NavBar = () => {
                 </p>
               </div>
             </div>
-            <Link href="#">
+            <button onClick={() => setMenu(true)}>
               <img
                 src="/assets/images/menu-burger.svg"
                 className="w-5 hidden max-[925px]:block"
                 alt="M"
-                onClick={() => setMenu(true)}
               />
-            </Link>
+            </button>
           </div>
         </div>
       </header>
@@ -161,7 +162,7 @@ const NavBar = () => {
                 Shope
               </p>
             </Link>
-            <Link href="/Login" className={`${State ? "hidden" : ""}`}>
+            <Link href="/login" className={`${State ? "hidden" : ""}`}>
               <p
                 className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900"
                 onClick={() => setMenu(false)}
@@ -170,7 +171,7 @@ const NavBar = () => {
               </p>
             </Link>
             <Link
-              href="/my_account"
+              href="/my-account"
               className={`${!State ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
             >
               <p

@@ -50,8 +50,7 @@ const CheckOut = () => {
 
       toast.success("Order created successfully!");
       setItems([]);
-      localStorage.removeItem("cart")
-      router.replace("/my_account");
+      router.replace("/my-account");
       setActive("orders");
     } catch (error) {
       toast.error(error.message)
@@ -131,13 +130,16 @@ const CheckOut = () => {
             <p className="pt-10 text-xl text-center text-semibold font-medium text-slate-800">
               If you want to edit your address, name, or email <br /> please go
               to the
-              <Link
-                href="/my_account"
+              <button
+                onClick={() => {
+                  setActive("address");
+                  router.push("/my-account")
+                }}
                 className="font-semibold text-[#088179] hover:underline"
               >
                 {" "}
                 My Account{" "}
-              </Link>
+              </button>
               page. .
             </p>
           </div>

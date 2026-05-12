@@ -205,7 +205,7 @@ const Login = () => {
           <p className="pb-4 text-[15px] font-semibold text-gray-600">
             You Dont Have Acount{" "}
             <Link
-              href="/Logup"
+              href="/signup"
               className="text-blue-500 hover:text-blue-600 underline"
             >
               Register!
