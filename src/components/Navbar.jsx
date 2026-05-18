@@ -14,7 +14,7 @@ const NavBar = () => {
   const { wishlis } = useWishlist();
 
   const pathNAme = usePathname();
-  const isAuthPage = ["/login", "signup"].includes(pathNAme.toLowerCase());
+  const isAuthPage = ["/login", "/signup"].includes(pathNAme.toLowerCase());
   const isHome = pathNAme === "/";
   const isShop = pathNAme === "/shop";
   const isMyAccount = pathNAme === "/my-account";
@@ -110,7 +110,7 @@ const NavBar = () => {
             <button onClick={() => setMenu(true)}>
               <img
                 src="/assets/images/menu-burger.svg"
-                className="w-5 hidden max-[925px]:block"
+                className="w-5 hidden max-[925px]:block cursor-pointer"
                 alt="M"
               />
             </button>

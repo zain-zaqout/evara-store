@@ -1,4 +1,3 @@
-"use client";
 import { useReducer, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { toast } from "react-toastify";

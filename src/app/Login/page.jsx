@@ -10,7 +10,7 @@ import { auth, db } from "@/src/lib/firebase";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { useWishlist } from "@/src/Contexts/WishlistContext";
 import { useCart } from "@/src/Contexts/CartContext";
-const Login = () => {
+const page = () => {
   const router = useRouter();
 
   const [Loading, setLoading] = useState(false);
@@ -216,4 +216,4 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+export default page;
