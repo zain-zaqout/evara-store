@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
 const ShopingaddressSection = () => {

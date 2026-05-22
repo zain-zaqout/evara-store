@@ -2,7 +2,7 @@
 import { useAuth } from "../Contexts/AuthContext";
 import { useEffect, useReducer, useState } from "react";
 import { Loader2, Star } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useParams } from "next/navigation";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase";
@@ -67,7 +67,7 @@ const Comments = () => {
     };
     fetchReviews();
   }, [id]);
-  
+
   const addReview = async () => {
     dispatch({ type: "LOADING" });
 
@@ -81,7 +81,7 @@ const Comments = () => {
     try {
       const docRef = await addDoc(collection(db, "reviews"), newComment);
       dispatch({ type: "NEW_COMMENT", val: { id: docRef.id, ...newComment } });
-      
+
       setComment("");
       toast.success("Comment Has Added successfully!");
     } catch (error) {
@@ -301,24 +301,21 @@ const Comments = () => {
                 onClick={() => {
                   if (Comment === "") return false
                   if (State) {
-                    setTimeout(() => {
-                      addReview();
-                    }, 2000);
+                    addReview();
                   } else {
                     toast.error("You Dont Have an Account!");
-                    setisLoading(false)
                     return false;
                   }
                 }}
               >
                 {comments.loading ? (
                   <>
-                  <Loader2 className="animate-spin"/>  
+                    <Loader2 className="animate-spin" />
                   </>
                 ) : (
-                    <>
-                Submit Review
-                    </>
+                  <>
+                    Submit Review
+                  </>
                 )}
               </button>
             </form>

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useEffect, useRef, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import {
@@ -17,6 +17,7 @@ import {
 import { auth, db } from "@/src/lib/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useWishlist } from "@/src/Contexts/WishlistContext";
+import { setCookie } from "cookies-next";
 
 const Logup = () => {
   const router = useRouter();
@@ -79,7 +80,7 @@ const Logup = () => {
       if (localWishlis) {
         const localData = JSON.parse(localWishlis);
         const addFnction = localData.map((item) => {
-          return addDoc(collection(db, "wishlis"), {...item, userId: user.uid}); 
+          return addDoc(collection(db, "wishlis"), { ...item, userId: user.uid });
         });
         await Promise.all(addFnction);
         setWishlis(localData || [])
@@ -89,7 +90,7 @@ const Logup = () => {
       if (localCart) {
         const localData = JSON.parse(localCart);
         const addFnction = localData.map((item) => {
-          return addDoc(collection(db, "cart"), {...item, userId: user.uid}); 
+          return addDoc(collection(db, "cart"), { ...item, userId: user.uid });
         });
         await Promise.all(addFnction);
         setWishlis(localData || [])
@@ -100,6 +101,12 @@ const Logup = () => {
       setCurrentUser({ ...user, ...userData });
       toast.success("Account created successfully");
 
+
+      setCookie("auth_token", "true", {
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/",
+        sameSite: 'lax',
+      });
       dispatch({ type: "user", val: "" });
       dispatch({ type: "email", val: "" });
       dispatch({ type: "password", val: "" });
@@ -123,18 +130,8 @@ const Logup = () => {
     inputFocus.current?.focus();
   }, []);
 
-  useEffect(() => {
-    if (!isAuthReady) return;
-    if (State) {
-      router.replace("/");
-    }
-  }, [State, isAuthReady, router]);
-
-  if (!isAuthReady || State) return null;
-
   return (
     <div className="bg-gray-50 h-screen flex justify-center items-center text-gray-900">
-      <ToastContainer />
       <div className="bg-white w-100 relative rounded-xl shadow-xl transition-shadow">
         <h2 className="text-center text-3xl font-bold pt-6 select-none">
           Create Account
@@ -161,6 +158,7 @@ const Logup = () => {
                 maxLength={8}
                 placeholder="Name..."
                 value={Data?.user}
+                disabled={Loading}
                 autoComplete="one-time-code"
                 onChange={(e) =>
                   dispatch({ type: "user", val: e.target.value })
@@ -172,6 +170,7 @@ const Logup = () => {
                 required
                 placeholder="Email..."
                 value={Data?.email}
+                disabled={Loading}
                 autoComplete="one-time-code"
                 onChange={(e) =>
                   dispatch({ type: "email", val: e.target.value })
@@ -185,6 +184,7 @@ const Logup = () => {
                 minLength={8}
                 maxLength={8}
                 value={Data?.password}
+                disabled={Loading}
                 autoComplete="new-password"
                 onChange={(e) =>
                   dispatch({ type: "password", val: e.target.value })

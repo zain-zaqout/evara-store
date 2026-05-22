@@ -6,7 +6,6 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com/)
 
 ## 🌐 Live Demo
@@ -15,38 +14,34 @@
 
 ---
 
-## 📸 لقطات من المشروع
-
-> _(أضف هنا صور Screenshots للمشروع)_
-
----
-
 ## ✨ المميزات
 
-| الميزة | الوصف |
-|--------|--------|
-| 🔐 **المصادقة** | تسجيل دخول وإنشاء حساب آمن مع Firebase Auth |
-| 🛒 **سلة التسوق** | إضافة وحذف المنتجات مع حفظ البيانات تلقائياً |
-| ❤️ **قائمة الرغبات** | حفظ المنتجات المفضلة بضغطة واحدة |
-| 👤 **حسابي** | إدارة البروفايل والعناوين وسجل الطلبات |
-| 📱 **تصميم متجاوب** | واجهة جميلة تعمل على جميع الأجهزة |
-| 🔔 **إشعارات فورية** | تنبيهات مباشرة مع react-toastify |
+| الميزة               | الوصف                                        |
+| -------------------- | -------------------------------------------- |
+| 🔐 **المصادقة**      | تسجيل دخول وإنشاء حساب آمن مع Firebase Auth  |
+| 🛒 **سلة التسوق**    | إضافة وحذف المنتجات مع حفظ البيانات تلقائياً |
+| ❤️ **قائمة الرغبات** | حفظ المنتجات المفضلة بضغطة واحدة             |
+| 👤 **حسابي**         | إدارة البروفايل والعناوين وسجل الطلبات       |
+| 📱 **تصميم متجاوب**  | واجهة جميلة تعمل على جميع الأجهزة            |
+| 🔔 **إشعارات فورية** | تنبيهات مباشرة مع react-toastify             |
 
 ---
 
 ## 🛠️ التقنيات المستخدمة
 
 ### Frontend
+
 - **[Next.js 16](https://nextjs.org/)** — إطار عمل React متقدم مع SSR و SSG
 - **[React 19](https://react.dev/)** — مكتبة واجهات المستخدم
 - **[Tailwind CSS](https://tailwindcss.com/)** — تصميم سريع وجميل
-- **[TypeScript](https://www.typescriptlang.org/)** — أمان الأنواع
 
 ### Backend & Database
+
 - **[Firebase Authentication](https://firebase.google.com/products/auth)** — إدارة المستخدمين بأمان
 - **[Cloud Firestore](https://firebase.google.com/products/firestore)** — قاعدة بيانات سحابية في الوقت الفعلي
 
 ### UI & UX
+
 - **[React Icons](https://react-icons.github.io/react-icons/)** — أيقونات عالية الجودة
 - **[Embla Carousel](https://www.embla-carousel.com/)** — عرض شرائح احترافي
 - **[React Toastify](https://fkhadra.github.io/react-toastify/)** — إشعارات جميلة
@@ -59,19 +54,15 @@
 src/
 ├── app/
 │   ├── page.jsx             # الصفحة الرئيسية
+│   ├── cart/                # سلة التسوق
 │   ├── shop/                # صفحة المتجر
-│   ├── Cart/                # سلة التسوق
 │   ├── wshlist/             # قائمة الرغبات
-│   ├── my_account/          # حسابي
-│   ├── Login/               # تسجيل الدخول
-│   ├── Logup/               # إنشاء حساب
-│   ├── CheckOut/            # الدفع
+│   ├── profile/             # حسابي
+│   ├── login/               # تسجيل الدخول
+│   ├── signup/              # إنشاء حساب
+│   ├── checkout/            # الدفع
 │   └── Product/[id]/        # تفاصيل المنتج
 ├── components/
-│   ├── Navbar.jsx
-│   ├── Footer.jsx
-│   ├── Products.jsx
-│   └── Swipper.jsx
 ├── Contexts/
 │   ├── AuthContext.jsx      # إدارة المصادقة
 │   ├── CartContext.jsx      # إدارة السلة
@@ -86,6 +77,7 @@ src/
 ## 🚀 تشغيل المشروع محلياً
 
 ### المتطلبات
+
 - Node.js 18+
 - npm أو yarn
 
@@ -154,16 +146,16 @@ vercel --prod
 
 ## 🎯 الصفحات الرئيسية
 
-| الصفحة | المسار | الوصف |
-|--------|--------|--------|
-| الرئيسية | `/` | عرض المنتجات المميزة |
-| المتجر | `/shop` | عرض جميع المنتجات |
-| المنتج | `/product/[id]` | تفاصيل المنتج |
-| السلة | `/cart` | مراجعة السلة |
-| الرغبات | `/wshlist` | قائمة المفضلة |
-| حسابي | `/my-account` | إدارة البروفايل |
-| الدخول | `/login` | تسجيل الدخول |
-| الاشتراك | `/signup` | إنشاء حساب جديد |
+| الصفحة   | المسار          | الوصف                |
+| -------- | --------------- | -------------------- |
+| الرئيسية | `/`             | عرض المنتجات المميزة |
+| المتجر   | `/shop`         | عرض جميع المنتجات    |
+| المنتج   | `/product/[id]` | تفاصيل المنتج        |
+| السلة    | `/cart`         | مراجعة السلة         |
+| الرغبات  | `/wshlist`      | قائمة المفضلة        |
+| حسابي    | `/profile`      | إدارة البروفايل      |
+| الدخول   | `/login`        | تسجيل الدخول         |
+| الاشتراك | `/signup`       | إنشاء حساب جديد      |
 
 ---
 

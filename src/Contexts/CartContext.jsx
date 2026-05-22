@@ -1,8 +1,8 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
-import { addDoc, collection, query, where, updateDoc, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
+import { addDoc, collection, query, where, updateDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
 export const cartContext = createContext();
@@ -10,7 +10,7 @@ export const cartContext = createContext();
 export const CartContext = ({ children }) => {
   const [Items, setItems] = useState([]);
   const [active, setActive] = useState("profile");
-  const [Loading, setLoading] = useState(false);
+  const [Loading, setLoading] = useState(true);
   const { currentUser } = useAuth()
 
   useEffect(() => {
@@ -40,6 +40,7 @@ export const CartContext = ({ children }) => {
       if (local) {
         setItems(JSON.parse(local));
       }
+      setLoading(false);
     }
   }, [currentUser?.uid]);
 
@@ -89,7 +90,6 @@ export const CartContext = ({ children }) => {
     if (currentUser?.uid) {
       if (fill.length === 0) {
         toast.success(`Product Has Successfully Removed From The Cart`);
-        toast.info(`The Cart Is Empty Go To Shop`);
       } else {
         toast.success(`Product Has Successfully Removed From The Cart`);
       }
@@ -216,7 +216,8 @@ export const CartContext = ({ children }) => {
           DeleveryTotal,
           CartTotal,
           active,
-          setActive
+          setActive,
+          Loading
         }}
       >
         {children}

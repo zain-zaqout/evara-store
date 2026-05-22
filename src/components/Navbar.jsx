@@ -17,7 +17,7 @@ const NavBar = () => {
   const isAuthPage = ["/login", "/signup"].includes(pathNAme.toLowerCase());
   const isHome = pathNAme === "/";
   const isShop = pathNAme === "/shop";
-  const isMyAccount = pathNAme === "/my-account";
+  const isMyAccount = pathNAme === "/profile";
 
   const router = useRouter();
 
@@ -51,7 +51,7 @@ const NavBar = () => {
               </p>
             </Link>
             <Link
-              href="/my-account"
+              href="/profile"
               className={`${!State ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
             >
               <p className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900">
@@ -171,7 +171,7 @@ const NavBar = () => {
               </p>
             </Link>
             <Link
-              href="/my-account"
+              href="/profile"
               className={`${!State ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
             >
               <p

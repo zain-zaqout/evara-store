@@ -1,11 +1,10 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 import {
   addDoc,
   collection,
-  doc,
   getDocs,
   query,
   where,
@@ -17,7 +16,7 @@ export const wishlistContext = createContext();
 
 export const WishlistContext = ({ children }) => {
   const [wishlis, setWishlis] = useState([]);
-  const [Loading, setLoading] = useState(false)
+  const [Loading, setLoading] = useState(true)
 
   const { currentUser } = useAuth();
 
@@ -76,6 +75,7 @@ export const WishlistContext = ({ children }) => {
       if (local) {
         setWishlis(JSON.parse(local));
       }
+      setLoading(false);
     }
   }, [currentUser?.uid]);
 
@@ -93,7 +93,6 @@ export const WishlistContext = ({ children }) => {
     setWishlis(fill);
     if (fill.length === 0) {
       toast.success(`Product Has Successfully Removed From The Wishilst`);
-      toast.info(`The Wishilst It Empity Go To Shop`);
     } else {
       toast.success(`Product Has Successfully Removed From The Wishilst`);
     }
@@ -126,7 +125,7 @@ export const WishlistContext = ({ children }) => {
   return (
     <>
       <wishlistContext.Provider
-        value={{ wishlis, setWishlis, addToWishlis, RemoveFromWishlis }}
+        value={{ wishlis, setWishlis, addToWishlis, RemoveFromWishlis, Loading }}
       >
         {children}
       </wishlistContext.Provider>

@@ -2,17 +2,20 @@
 import Link from "next/link";
 import { useCart } from "../../Contexts/CartContext";
 import { useAuth } from "../../Contexts/AuthContext";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/src/lib/firebase";
 import { Loader2 } from "lucide-react";
+import { FullPageLoader } from "@/src/components/FullPageLoader";
 
 const CheckOut = () => {
   const router = useRouter();
 
   const [Loading, setLoading] = useState(false);
+  const [isChecking, setIsChecking] = useState(true)
+  const [isOrderCompleted, setisOrderCompleted] = useState(false)
 
   const { currentUser, addressData } = useAuth();
   const { Items, setItems, Total, CartTotal, DeleveryTotal, setActive } =
@@ -47,10 +50,11 @@ const CheckOut = () => {
       };
 
       await addDoc(collection(db, "orders"), orderData);
+      setisOrderCompleted(true)
 
       toast.success("Order created successfully!");
       setItems([]);
-      router.replace("/my-account");
+      router.replace("/profile");
       setActive("orders");
     } catch (error) {
       toast.error(error.message)
@@ -59,6 +63,14 @@ const CheckOut = () => {
     }
   }
 
+  useEffect(() => {
+    if (Items.length === 0 && !isOrderCompleted) {
+      router.replace("/cart");
+    } else {
+      setIsChecking(false)
+    }
+  }, [router, Items])
+
   const billingName = currentUser?.user ?? "";
   const billingEmail = currentUser?.email ?? "";
   const billingStreet = [addressData?.flat, addressData?.street]
@@ -66,6 +78,12 @@ const CheckOut = () => {
     .join(" / ");
   const billingCity = addressData?.city ?? "";
   const billingCountry = addressData?.country ?? "";
+
+  if (isChecking) {
+    return (
+      <FullPageLoader />
+    )
+  }
 
   return (
     <>
@@ -133,12 +151,11 @@ const CheckOut = () => {
               <button
                 onClick={() => {
                   setActive("address");
-                  router.push("/my-account")
+                  router.push("/profile")
                 }}
-                className="font-semibold text-[#088179] hover:underline"
+                className="font-semibold cursor-pointer text-[#088179] hover:underline"
               >
-                {" "}
-                My Account{" "}
+                {" "}My Account{" "}
               </button>
               page. .
             </p>

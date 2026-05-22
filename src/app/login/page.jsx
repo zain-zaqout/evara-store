@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "sonner";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import { auth, db } from "@/src/lib/firebase";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { useWishlist } from "@/src/Contexts/WishlistContext";
 import { useCart } from "@/src/Contexts/CartContext";
+import { setCookie } from "cookies-next";
 const page = () => {
   const router = useRouter();
 
@@ -18,12 +19,10 @@ const page = () => {
     Data,
     setState,
     dispatch,
-    State,
-    isAuthReady,
     setCurrentUser
   } = useAuth();
   const { setWishlis } = useWishlist();
-  const {setItems} = useCart()
+  const { setItems } = useCart()
 
   async function checkData() {
     const emailValue = Data.email?.trim();
@@ -58,7 +57,7 @@ const page = () => {
         setWishlis(localData || [])
         localStorage.removeItem("wishlis");
       }
-      
+
       if (localCart) {
         const localData = JSON.parse(localCart);
         const addFnction = localData.map((item) => {
@@ -71,14 +70,22 @@ const page = () => {
       }
 
       const userDoc = await getDoc(doc(db, "users", user.uid));
-
+      setCookie("auth_token", "true", {
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/",
+        sameSite: 'lax',
+      });
       if (userDoc.exists()) {
         setCurrentUser({ ...user, ...userDoc.data() });
         setState(true);
       }
       dispatch({ type: "email", val: "" });
       dispatch({ type: "password", val: "" });
-      router.replace("/")
+      setTimeout(() => {
+
+        router.replace("/")
+      }, 200);
+
     } catch (error) {
       if (error.code === "auth/wrong-password") {
         toast.error("كلمة المرور غلط");
@@ -95,18 +102,8 @@ const page = () => {
     InputFocus.current?.focus();
   }, []);
 
-  useEffect(() => {
-    if (!isAuthReady) return;
-    if (State) {
-      router.replace("/");
-    }
-  }, [State, isAuthReady, router]);
-
-  if (!isAuthReady || State) return null;
-
   return (
     <div className="bg-gray-50 h-screen flex justify-center items-center text-gray-900">
-      <ToastContainer />
       <div className="bg-white w-100 rounded-xl shadow-xl transition-shadow">
         <div>
           <h2 className="text-center text-3xl font-bold pt-6 select-none">
@@ -131,6 +128,7 @@ const page = () => {
              transition-colors duration-400"
                   placeholder="Email..."
                   value={Data.email}
+                  disabled={Loading}
                   autoComplete="one-time-code"
                   onChange={(e) =>
                     dispatch({ type: "email", val: e.target.value })
@@ -156,6 +154,7 @@ const page = () => {
                   maxLength={8}
                   placeholder="password..."
                   value={Data.password}
+                  disabled={Loading}
                   autoComplete="new-password"
                   onChange={(e) =>
                     dispatch({ type: "password", val: e.target.value })

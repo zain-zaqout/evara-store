@@ -1,8 +1,21 @@
 ﻿@import "tailwindcss";
 
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src:
+    url("/assets/fonts/PlusJakartaSans-VariableFont_wght.ttf")
+      format("truetype-supports-variations"),
+    url("/assets/fonts/PlusJakartaSans-VariableFont_wght.ttf")
+      format("truetype");
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-manrope: "Plus Jakarta Sans", sans-serif;
 }
 
 @theme inline {
@@ -20,6 +33,13 @@
   }
 }
 
+* {
+  font-family: var(--font-sans) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -32,4 +52,31 @@ input[type="number"]::-webkit-inner-spin-button {
   background: #f3f4f6;
   border-left: 1px solid #d1d5db;
   opacity: 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.price,
+.amount,
+button,
+.btn,
+.button,
+strong,
+b {
+  font-weight: 700;
+}
+
+p,
+span,
+a,
+li,
+input,
+textarea,
+select,
+label {
+  font-weight: 500;
 }

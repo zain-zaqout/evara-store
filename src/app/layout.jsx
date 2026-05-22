@@ -1,4 +1,4 @@
-﻿import { Playfair_Display, Manrope, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Manrope, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -6,7 +6,7 @@ import FooterBottom from "../components/FooterBottom";
 import NewSletter from "../components/NewSletter";
 import { CartContext } from "../Contexts/CartContext";
 import { WishlistContext } from "../Contexts/WishlistContext";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "sonner";
 import { ProductsContext } from "../Contexts/ProductsContext";
 import { AuthContext } from "../Contexts/AuthContext";
 import { MenuContext } from "../Contexts/MenuContext";
@@ -47,7 +47,7 @@ export default function RootLayout({
             <ProductsContext>
               <WishlistContext>
                 <CartContext>
-                  <ToastContainer />
+                  <Toaster richColors position="top-right" />
                   <NavBar />
                   {children}
                   <NewSletter />

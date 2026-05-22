@@ -1,11 +1,11 @@
-import Main from "./Main/page";
+import Hero from "../components/Hero";
 import Swipper from "../components/Swipper";
 import Products from "../components/Products";
 import ShowCase from "../components/ShowCase";
 const page = () => {
   return (
     <>
-      <Main />
+      <Hero />
       <Swipper />
       <Products />
       <ShowCase />

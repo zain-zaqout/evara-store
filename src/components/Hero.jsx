@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Main = () => {
+const Hero = () => {
   return (
     <>
       <div>
@@ -19,9 +19,9 @@ const Main = () => {
               Save more with coupons & up to 20% off
             </p>
             <Link href="/shop">
-            <button className="inline-block bg-[#088179] border-2 border-[#088179] px-7 h-[49px] rounded-sm font-bold transition-all duration-400 text-[#ffffff] text-sm hover:bg-transparent hover:text-[#088179] cursor-pointer mt-4 max-[800px]:h-10 max-[800px]:px-5">
-              Shop Now
-            </button>
+              <button className="inline-block bg-[#088179] border-2 border-[#088179] px-7 h-[49px] rounded-sm font-bold transition-all duration-400 text-[#ffffff] text-sm hover:bg-transparent hover:text-[#088179] cursor-pointer mt-4 max-[800px]:h-10 max-[800px]:px-5">
+                Shop Now
+              </button>
             </Link>
           </div>
           <div>
@@ -36,4 +36,4 @@ const Main = () => {
     </>
   );
 };
-export default Main;
+export default Hero;

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../Contexts/AuthContext";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import {
   collection,
@@ -17,6 +17,12 @@ const UpdateProfileSection = () => {
   const [error, setError] = useState(null);
 
   const { Data, dispatch, currentUser, setCurrentUser } = useAuth();
+
+  useEffect(() => {
+    if (currentUser?.user && Data.user === "") {
+      dispatch({ type: "user", val: currentUser.user });
+    }
+  }, [currentUser]);
 
   async function changeData() {
     const nameValue = Data.user?.trim();

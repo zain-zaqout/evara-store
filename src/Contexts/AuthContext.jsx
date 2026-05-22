@@ -9,6 +9,8 @@ import {
 } from "react";
 import { auth, db } from "../lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { deleteCookie, setCookie } from "cookies-next";
+import { FullPageLoader } from "../components/FullPageLoader";
 
 export const Context = createContext();
 
@@ -44,7 +46,6 @@ export const AuthContext = ({ children }) => {
         return { ...state, city: action.val };
       case "country":
         return { ...state, country: action.val };
-      case "flat":
       default:
         return state;
     }
@@ -55,30 +56,45 @@ export const AuthContext = ({ children }) => {
   useEffect(() => {
     const unsubsctibe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          const resolvedAddress =
-            userData.address ??
-            userData.addresss ?? {
+        setCookie("auth_token", "true", {
+          maxAge: 60 * 60 * 24 * 7,
+          path: "/",
+          sameSite: 'lax',
+        });
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const resolvedAddress = userData.address ?? userData.addresss ?? {
               flat: userData.flat ?? "",
               street: userData.street ?? "",
               city: userData.city ?? "",
               country: userData.country ?? "",
             };
 
-          setCurrentUser({ ...user, ...userData, address: resolvedAddress});
-          setaddressData(resolvedAddress);
+            setCurrentUser({ ...user, ...userData, address: resolvedAddress });
+            setaddressData(resolvedAddress);
+            setState(true);
+          } else {
+            setCurrentUser(user);
+            setState(true);
+          }
+        } catch (error) {
+          setCurrentUser(user);
           setState(true);
-        } else {
-          setCurrentUser(null);
-          setState(false);
         }
+      } else {
+        deleteCookie("auth_token");
+        setCurrentUser(null);
+        setState(false);
+        setaddressData(null);
       }
       setIsAuthReady(true);
     });
     return () => unsubsctibe();
   }, []);
+
+  if (!isAuthReady) return <FullPageLoader />
 
   return (
     <>

@@ -1,26 +1,28 @@
 "use client";
 import {
-  Key,
   LogOut,
   MapPin,
   Package,
   User,
   Trash2,
   Loader2,
+  Lock,
 } from "lucide-react";
 import { useState } from "react";
 import UpdateProfileSection from "../../components/UpdateProfileSection";
 import OrderSection from "../../components/OrderSection";
 import ShopingaddressSection from "../../components/ShopingAddresSection";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useCart } from "../../Contexts/CartContext";
 import { deleteUser, signOut } from "firebase/auth";
 import { auth, db } from "@/src/lib/firebase";
 import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
+import { deleteCookie } from "cookies-next";
+import { useWishlist } from "@/src/Contexts/WishlistContext";
 
-const MyAccount = () => {
+const Profile = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const router = useRouter();
 
@@ -31,7 +33,8 @@ const MyAccount = () => {
     setaddressData,
     setCurrentUser,
   } = useAuth();
-  const { active, setActive } = useCart();
+  const { active, setActive, setItems } = useCart();
+  const { setwishlist } = useWishlist()
 
   async function getWishlisDataForDeleted() {
 
@@ -77,30 +80,31 @@ const MyAccount = () => {
   }
 
   async function deletAccount() {
-    try {
+    toast.info("")
+    // try {
 
-      await getWishlisDataForDeleted()
-      await getCartDataForDeleted()
-      await getReviewsDataForDeleted()
-      await getOrdersDataForDeleted()
+    //   await getWishlisDataForDeleted()
+    //   await getCartDataForDeleted()
+    //   await getReviewsDataForDeleted()
+    //   await getOrdersDataForDeleted()
 
-      await deleteDoc(doc(db, "users", currentUser.uid));
-      await deleteUser(auth.currentUser);
+    //   await deleteDoc(doc(db, "users", currentUser.uid));
+    //   await deleteUser(auth.currentUser);
 
-      router.replace("/login");
-      toast.success("Your account has been deleted successfully.");
+    //   router.replace("/");
+    //   toast.success("Your account has been deleted successfully.");
 
-      setState(false);
-      setCurrentUser(null);
+    //   setState(false);
+    //   setCurrentUser(null);
 
-      setaddressData(null);
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-      setActive("profile");
-      setShowDeleteModal(false);
-    }
+    //   setaddressData(null);
+    // } catch (error) {
+    //   toast.error(error.message);
+    //   setLoading(false);
+    //   setActive("profile");
+    // } finally {
+    //   setShowDeleteModal(false);
+    // }
   }
 
   return (
@@ -122,6 +126,15 @@ const MyAccount = () => {
             <span>My address</span>
           </button>
           <button
+            className={`w-full text-left px-3 py-3 font-semibold cursor-pointer border border-gray-200 flex items-center gap-2 ${active === "password" ? "text-white bg-[#088179]" : "text-gray-900"}`}
+            onClick={() => {
+              toast.info("Password change is under development by our support team. Coming soon!");
+            }}
+          >
+            <Lock size={18} />
+            <span>Change Password</span>
+          </button>
+          <button
             className={`w-full text-left px-3 py-3 font-semibold cursor-pointer border border-gray-200 flex items-center gap-2 ${active === "orders" ? "text-white bg-[#088179]" : "text-gray-900"}`}
             onClick={() => setActive("orders")}
           >
@@ -130,12 +143,21 @@ const MyAccount = () => {
           </button>
           <button
             className={`w-full text-left px-3 py-3 font-semibold cursor-pointer border border-gray-200 flex items-center gap-2 ${active === "logout" ? "text-white bg-red-600" : "text-gray-900"}`}
-            onClick={() => {
-              signOut(auth);
-              router.replace("/");
-              setState(false);
-              setCurrentUser(null);
-              setaddressData(null);
+            onClick={async () => {
+              setLoading(true)
+              try {
+                await signOut(auth);
+                await deleteCookie("auth_token")
+                router.replace("/");
+                setState(false);
+                setCurrentUser(null);
+                setaddressData(null);
+                setItems([])
+                setwishlist([])
+              } catch (error) {
+                toast.error("some thing went error!")
+                setLoading(false)
+              }
             }}
           >
             <LogOut size={18} />
@@ -144,8 +166,9 @@ const MyAccount = () => {
           <button
             className={`w-full text-left px-3 py-3 font-semibold cursor-pointer border border-gray-200 flex items-center gap-2 ${active === "remove" ? "text-white bg-red-600" : "text-gray-900"}`}
             onClick={() => {
-              setActive("remove");
-              setShowDeleteModal(true);
+              // setActive("remove");
+              // setShowDeleteModal(true);
+              toast.info("Account deletion is under development by our support team. Coming soon!");
             }}
           >
             <Trash2 size={18} />
@@ -205,7 +228,7 @@ const MyAccount = () => {
               <button
                 onClick={() => {
                   setLoading(true);
-                    deletAccount();
+                  deletAccount();
                 }}
                 disabled={Loading}
                 className="inline-flex h-9 items-center justify-center rounded-md bg-red-600 w-43 text-sm font-semibold text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/40"
@@ -225,4 +248,4 @@ const MyAccount = () => {
     </div>
   );
 };
-export default MyAccount;
+export default Profile;

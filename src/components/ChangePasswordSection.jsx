@@ -1,6 +1,6 @@
 import { useReducer, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 const ChangePasswordSection = () => {
   const [NewPassword, setNewPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
