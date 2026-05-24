@@ -35,7 +35,7 @@ const page = () => {
       return toast.error("Invalid email address!");
     }
     if (passwordValue.length < 8) {
-      return toast.error("Password must be exactly 8 characters");
+      return toast.error("Password must be at least 8 characters long.");
     }
 
     setLoading(true);
@@ -79,18 +79,19 @@ const page = () => {
         setCurrentUser({ ...user, ...userDoc.data() });
         setState(true);
       }
+      setTimeout(() => {
+        router.replace("/")
+      }, 100);
       dispatch({ type: "email", val: "" });
       dispatch({ type: "password", val: "" });
-      setTimeout(() => {
-
-        router.replace("/")
-      }, 200);
 
     } catch (error) {
-      if (error.code === "auth/wrong-password") {
-        toast.error("كلمة المرور غلط");
+      if (error.code === "auth/wrong-password" || error.code === "auth/user-not-found" || error.code === "auth/invalid-credential") {
+        toast.error("Invalid email or password. Please try again.");
+      } else if (error.code === "auth/too-many-requests") {
+        toast.error("Too many failed attempts. Please try again later.");
       } else {
-        toast.error(error.message);
+        toast.error("An unexpected error occurred. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -151,7 +152,7 @@ const page = () => {
              focus:border-none
              transition-colors duration-400"
                   minLength={8}
-                  maxLength={8}
+                  maxLength={30}
                   placeholder="password..."
                   value={Data.password}
                   disabled={Loading}
@@ -200,9 +201,9 @@ const page = () => {
             </div>
           </form>
         </div>
-        <div className="w-[80%] m-auto mt-4">
-          <p className="pb-4 text-[15px] font-semibold text-gray-600">
-            You Dont Have Acount{" "}
+        <div className="w-[80%] m-auto flex justify-center py-4">
+          <p className="text-[15px] font-semibold text-gray-600">
+            You Dont Have Acount?{" "}
             <Link
               href="/signup"
               className="text-blue-500 hover:text-blue-600 underline"

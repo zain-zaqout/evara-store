@@ -148,14 +148,16 @@ const Profile = () => {
               try {
                 await signOut(auth);
                 await deleteCookie("auth_token")
-                router.replace("/");
                 setState(false);
                 setCurrentUser(null);
                 setaddressData(null);
                 setItems([])
                 setwishlist([])
-              } catch (error) {
-                toast.error("some thing went error!")
+                toast.success("Successfully logged out!");
+                router.replace("/");
+              } catch (e) {
+                toast.error("Failed to log out. Please try again.");
+              } finally {
                 setLoading(false)
               }
             }}

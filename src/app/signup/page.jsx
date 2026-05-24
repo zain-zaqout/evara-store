@@ -23,7 +23,7 @@ const Logup = () => {
   const router = useRouter();
 
   const [Loading, setLoading] = useState(false);
-  const { Data, dispatch, setState, State, isAuthReady, setCurrentUser } =
+  const { Data, dispatch, setState, setCurrentUser } =
     useAuth();
   const { setWishlis } = useWishlist();
 
@@ -42,7 +42,7 @@ const Logup = () => {
         "Invalid email address! Please check the format (name@mail.com).",
       );
     } else if (passwordValue.length < 8) {
-      return toast.error("Password must be exactly 8 characters");
+      return toast.error("Password must be at least 8 characters long.");
     }
 
     setLoading(true);
@@ -101,24 +101,36 @@ const Logup = () => {
       setCurrentUser({ ...user, ...userData });
       toast.success("Account created successfully");
 
-
       setCookie("auth_token", "true", {
         maxAge: 60 * 60 * 24 * 7,
         path: "/",
         sameSite: 'lax',
       });
+      setTimeout(() => {
+        router.replace("/")
+      }, 100);
       dispatch({ type: "user", val: "" });
       dispatch({ type: "email", val: "" });
       dispatch({ type: "password", val: "" });
     } catch (error) {
       setLoading(false);
 
-      if (error.code === "auth/email-already-in-use") {
-        toast.error("This email is already in use");
-      } else if (error.code === "auth/weak-password") {
-        toast.error("Password is too weak");
-      } else {
-        toast.error("An error occurred during registration");
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          toast.error("This email is already registered. Please login instead.");
+          break;
+        case "auth/invalid-email":
+          toast.error("The email address provided is invalid.");
+          break;
+        case "auth/weak-password":
+          toast.error("Password should be at least 6 characters long.");
+          break;
+        case "auth/network-request-failed":
+          toast.error("Network error. Please check your internet connection.");
+          break;
+        default:
+          toast.error("Registration failed. Please try again later.");
+          break;
       }
     } finally {
       setLoading(false);
@@ -155,7 +167,7 @@ const Logup = () => {
                 type="text"
                 required
                 minLength={3}
-                maxLength={8}
+                maxLength={15}
                 placeholder="Name..."
                 value={Data?.user}
                 disabled={Loading}
@@ -182,7 +194,7 @@ const Logup = () => {
                 required
                 placeholder="Password..."
                 minLength={8}
-                maxLength={8}
+                maxLength={30}
                 value={Data?.password}
                 disabled={Loading}
                 autoComplete="new-password"
@@ -207,7 +219,7 @@ const Logup = () => {
                 )}
               </button>
             </div>
-            <div className="flex py-3 text-center">
+            <div className="flex justify-center py-4 text-center">
               <p className="text-[15px] font-semibold text-gray-600">
                 {" "}
                 Already have an

@@ -1,14 +1,17 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../Contexts/AuthContext";
 import { useCart } from "../Contexts/CartContext";
 import { LocationEdit } from "lucide-react";
 
 const Sign = () => {
   const router = useRouter()
+  const path = usePathname()
   const { State } = useAuth();
   const { setActive } = useCart()
+
+  if (path === "/signup" || path === "/login") return null
 
   return (
     <>

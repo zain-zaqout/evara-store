@@ -63,7 +63,7 @@ const NavBar = () => {
             <div className="relative">
               <input
                 type="text"
-                className="outline w-58 outline-gray-300 max-[600px]:hidden focus:outline-gray-800 text-lg duration-400 shadow-sm focus:shadow-md  placeholder:text-gray-400 placeholder:text-[15px] pl-2 h-9 rounded transition"
+                className="outline w-58 pb-0.75 outline-gray-300 max-[600px]:hidden focus:outline-gray-800 text-lg duration-400 shadow-sm focus:shadow-md placeholder:text-gray-400 placeholder:text-[15px] pl-2.75 h-9 rounded transition"
                 placeholder="Search for Items..."
                 id="search"
                 maxLength={21}
@@ -137,7 +137,7 @@ const NavBar = () => {
               type="text"
               placeholder="Search for Items..."
               maxLength={21}
-              className="w-full h-9 pl-3 pr-9 border border-gray-300 rounded shadow-sm focus:shadow-md focus:outline-none focus:border-gray-400 placeholder:text-gray-400 placeholder:text-[10px] transition"
+              className="w-full h-9 pl-2.25 pr-9 border border-gray-300 rounded shadow-sm focus:shadow-md focus:outline-none focus:border-gray-400 placeholder:text-gray-400 placeholder:text-[14.5px] transition"
             />
             <img
               src="/assets/images/search.png"

@@ -12,19 +12,19 @@ const ShopingaddressSection = () => {
   async function updateaddress() {
     if (addressData) {
       if (Data?.flat && Data?.flat.length < 4) {
-        return toast.error("Flat");
+        return toast.error("Flat number must be at least 4 characters long.");
       }
       if (Data?.street && Data?.street.length < 4) {
-        return toast.error("Street");
+        return toast.error("Street name must be at least 4 characters long.");
       }
       if (Data?.city && Data?.city.length < 3) {
-        return toast.error("City");
+        return toast.error("City name must be at least 3 characters long.");
       }
       if (Data?.country && Data?.country.length < 4) {
-        return toast.error("Country");
+        return toast.error("Country name must be at least 4 characters long.");
       }
       if (!Data.flat && !Data.street && !Data.city && !Data.country) {
-        return toast.error("No Data For Updated")
+        return toast.error("No data provided for update.")
       }
     }
     setLoading(true);
@@ -46,7 +46,7 @@ const ShopingaddressSection = () => {
       dispatch({ type: "street", val: "" });
       dispatch({ type: "city", val: "" });
       dispatch({ type: "country", val: "" });
-      
+
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -73,7 +73,7 @@ const ShopingaddressSection = () => {
                   className="border border-gray-300 text-gray-600 w-full focus:outline-none pl-3 py-1.5 placeholder:text-gray-400 placeholder:text-[15px] font-medium rounded"
                   placeholder={addressData?.flat || "Flat"}
                   value={Data.flat}
-                  maxLength={6}
+                  maxLength={10}
                   onChange={(e) =>
                     dispatch({ type: "flat", val: e.target.value })
                   }
@@ -83,7 +83,7 @@ const ShopingaddressSection = () => {
                   className="border border-gray-300 text-gray-600 w-full focus:outline-none pl-3 py-1.5 placeholder:text-gray-400 placeholder:text-[15px] font-medium rounded"
                   placeholder={addressData?.street || "Street"}
                   value={Data.street}
-                  maxLength={15}
+                  maxLength={25}
                   onChange={(e) =>
                     dispatch({ type: "street", val: e.target.value })
                   }

@@ -99,7 +99,7 @@ const UpdateProfileSection = () => {
                     dispatch({ type: "user", val: e.target.value })
                   }
                   minLength={3}
-                  maxLength={8}
+                  maxLength={15}
                   className="border border-gray-300 text-gray-600 w-full focus:outline-none pl-3 py-1.5 placeholder:text-gray-400 placeholder:text-[15px] font-medium rounded"
                   placeholder={currentUser?.user || ""}
                 />

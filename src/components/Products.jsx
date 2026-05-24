@@ -86,7 +86,7 @@ const Products = () => {
                       className="absolute bottom-[0.5px] w-55 h-55 rounded-2xl select-none opacity-0 group-hover:opacity-100 transition-opacity ease-out duration-500"
                       alt=""
                     />
-                    <div className="flex justify-center gap-2 absolute bottom-24.5 left-18 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex justify-center gap-2 absolute bottom-24.5 left-18 min-[1024px]:opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="group/icon relative bg-gray-200 cursor-pointer w-8 h-8 rounded-[50%] flex justify-center items-center">
                         <Link href={`/product/${item.id}`}>
                           <Eye size={15} />
