@@ -3,6 +3,8 @@ import { useCart } from "../../Contexts/CartContext";
 import Link from "next/link";
 import { useWishlist } from "../../Contexts/WishlistContext";
 import { Trash2 } from "lucide-react";
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 const page = () => {
   const { addToCart } = useCart();
@@ -86,7 +88,9 @@ const page = () => {
             {wishlis.map((item) => (
               <tr key={item.productId} className="border-b border-gray-200 hover:bg-gray-50/60">
                 <td className="text-center py-4">
-                  <img src={item.firstImage} className="w-20 mx-auto" alt="" />
+                  <Zoom zoomMargin={20}>
+                    <img src={item.firstImage} className="w-20 mx-auto" alt="" />
+                  </Zoom>
                 </td>
                 <td className="text-center py-4">
                   <h3 className="text-[#088179] font-semibold">

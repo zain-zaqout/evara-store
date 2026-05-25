@@ -6,6 +6,8 @@ import { useCart } from "../../../Contexts/CartContext";
 import { useWishlist } from "@/src/Contexts/WishlistContext";
 import { useParams, useRouter } from "next/navigation";
 import Comments from "@/src/components/G&R_Comments";
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 const Product = () => {
   const [active, setActive] = useState(1);
@@ -105,11 +107,14 @@ const Product = () => {
       <div className="mt-13">
         <div className="w-[80%] m-auto grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] max-[890px]:gap-4">
           <div>
-            <img
-              className="w-full min-[890px]:max-w-[90%] select-none"
-              src={ImgDiriction === "front" ? item.firstImage : item.lastImage}
-              alt=""
-            />
+            <Zoom zoomMargin={20}>
+
+              <img
+                className="w-full min-[890px]:max-w-[90%] select-none"
+                src={ImgDiriction === "front" ? item.firstImage : item.lastImage}
+                alt=""
+              />
+            </Zoom>
             <div className="flex gap-1 mt-1">
               <img
                 className={`select-none cursor-pointer ${ImgDiriction === "front" ? "border border-gray-400" : ""}`}

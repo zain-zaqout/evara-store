@@ -5,6 +5,8 @@ import { useCart } from "../../Contexts/CartContext";
 import { useAuth } from "../../Contexts/AuthContext";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 const page = () => {
   const router = useRouter();
@@ -117,7 +119,9 @@ const page = () => {
               {Items.map((item) => (
                 <tr key={item.productId} className="border-b border-gray-300 hover:bg-gray-50/60">
                   <td className="py-4">
-                    <img src={item.firstImage} className="w-20 mx-auto" alt="" />
+                    <Zoom zoomMargin={20}>
+                      <img src={item.firstImage} className="w-20 mx-auto" alt="" />
+                    </Zoom>
                   </td>
                   <td className="w-5 h-5 text-center py-4">
                     <h3 className="text-[#088179] font-semibold">

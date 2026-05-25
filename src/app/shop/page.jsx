@@ -1,5 +1,5 @@
 "use client";
-import { Star, Eye, Heart, Shuffle, ShoppingBag } from "lucide-react";
+import { Star, Eye, Heart, ShoppingBag } from "lucide-react";
 import { useCart } from "../../Contexts/CartContext";
 import { useWishlist } from "../../Contexts/WishlistContext";
 import Link from "next/link";
