@@ -15,15 +15,14 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "@/src/lib/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from "firebase/auth";
 import { useWishlist } from "@/src/Contexts/WishlistContext";
-import { setCookie } from "cookies-next";
 
-const Logup = () => {
+const page = () => {
   const router = useRouter();
 
   const [Loading, setLoading] = useState(false);
-  const { Data, dispatch, setState, setCurrentUser } =
+  const { Data, dispatch } =
     useAuth();
   const { setWishlis } = useWishlist();
 
@@ -96,25 +95,17 @@ const Logup = () => {
         setWishlis(localData || [])
         localStorage.removeItem("cart");
       }
+      await sendEmailVerification(user)
+      await signOut(auth)
+      toast.success("Verification email sent! Check your inbox at " + user.email)
 
-      setState(true);
-      setCurrentUser({ ...user, ...userData });
-      toast.success("Account created successfully");
-
-      setCookie("auth_token", "true", {
-        maxAge: 60 * 60 * 24 * 7,
-        path: "/",
-        sameSite: 'lax',
-      });
-      setTimeout(() => {
-        router.replace("/")
-      }, 100);
       dispatch({ type: "user", val: "" });
       dispatch({ type: "email", val: "" });
       dispatch({ type: "password", val: "" });
-    } catch (error) {
-      setLoading(false);
 
+      router.push("/login")
+
+    } catch (error) {
       switch (error.code) {
         case "auth/email-already-in-use":
           toast.error("This email is already registered. Please login instead.");
@@ -239,4 +230,4 @@ const Logup = () => {
   );
 };
 
-export default Logup;
+export default page;

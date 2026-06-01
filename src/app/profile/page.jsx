@@ -34,7 +34,7 @@ const Profile = () => {
     setCurrentUser,
   } = useAuth();
   const { active, setActive, setItems } = useCart();
-  const { setwishlist } = useWishlist()
+  const { setWishlis } = useWishlist()
 
   async function getWishlisDataForDeleted() {
 
@@ -80,31 +80,51 @@ const Profile = () => {
   }
 
   async function deletAccount() {
-    toast.info("")
-    // try {
+    try {
 
-    //   await getWishlisDataForDeleted()
-    //   await getCartDataForDeleted()
-    //   await getReviewsDataForDeleted()
-    //   await getOrdersDataForDeleted()
+      await getWishlisDataForDeleted()
+      await getCartDataForDeleted()
+      await getReviewsDataForDeleted()
+      await getOrdersDataForDeleted()
 
-    //   await deleteDoc(doc(db, "users", currentUser.uid));
-    //   await deleteUser(auth.currentUser);
+      await deleteDoc(doc(db, "users", currentUser.uid));
+      await deleteUser(auth.currentUser);
 
-    //   router.replace("/");
-    //   toast.success("Your account has been deleted successfully.");
+      router.replace("/");
+      toast.success("Your account has been deleted successfully.");
 
-    //   setState(false);
-    //   setCurrentUser(null);
+      setState(false);
+      setCurrentUser(null);
 
-    //   setaddressData(null);
-    // } catch (error) {
-    //   toast.error(error.message);
-    //   setLoading(false);
-    //   setActive("profile");
-    // } finally {
-    //   setShowDeleteModal(false);
-    // }
+      setaddressData(null);
+    } catch (error) {
+      toast.error(error.message);
+      setLoading(false);
+      setActive("profile");
+    } finally {
+      setShowDeleteModal(false);
+    }
+  }
+
+  const logout = async () => {
+    setLoading(true)
+    try {
+      await signOut(auth);
+      deleteCookie("auth_token")
+
+      setState(false);
+      setCurrentUser(null);
+      setaddressData(null);
+      setItems([])
+      setWishlis([])
+
+      toast.success("Successfully logged out!");
+      setTimeout(() => router.replace("/"), 100)
+    } catch {
+      toast.error("Failed to log out. Please try again.");
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -143,24 +163,7 @@ const Profile = () => {
           </button>
           <button
             className={`w-full text-left px-3 py-3 font-semibold cursor-pointer border border-gray-200 flex items-center gap-2 ${active === "logout" ? "text-white bg-red-600" : "text-gray-900"}`}
-            onClick={async () => {
-              setLoading(true)
-              try {
-                await signOut(auth);
-                await deleteCookie("auth_token")
-                setState(false);
-                setCurrentUser(null);
-                setaddressData(null);
-                setItems([])
-                setwishlist([])
-                toast.success("Successfully logged out!");
-                router.replace("/");
-              } catch (e) {
-                toast.error("Failed to log out. Please try again.");
-              } finally {
-                setLoading(false)
-              }
-            }}
+            onClick={() => logout()}
           >
             <LogOut size={18} />
             <span>Logout</span>

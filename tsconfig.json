@@ -57,7 +57,8 @@
     "src/components/Footer.jsx",
     "src/components/G&R_Comments.jsx",
     "src/app/layout.jsx",
-    "src/app/Product/[id]/page.jsx"
+    "src/app/Product/[id]/page.jsx",
+    "src/components/UnverifiedAccount.jsx"
   ],
   "exclude": ["node_modules"]
 }
