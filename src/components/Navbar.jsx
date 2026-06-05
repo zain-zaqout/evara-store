@@ -8,13 +8,13 @@ import { useWishlist } from "../Contexts/WishlistContext";
 import { useRouter } from "next/navigation";
 
 const NavBar = () => {
-  const { State } = useAuth();
+  const { currentUser } = useAuth();
   const { Menu, setMenu } = useMenu();
   const { Items } = useCart();
   const { wishlis } = useWishlist();
 
   const pathNAme = usePathname();
-  const isAuthPage = ["/login", "/signup"].includes(pathNAme.toLowerCase());
+  const isAuthPage = ["/login", "/signup", "/verify-email"].includes(pathNAme.toLowerCase());
   const isHome = pathNAme === "/";
   const isShop = pathNAme === "/shop";
   const isMyAccount = pathNAme === "/profile";
@@ -45,14 +45,14 @@ const NavBar = () => {
                 Shope
               </p>
             </Link>
-            <Link href="/login" className={`${State ? "hidden" : ""}`}>
+            <Link href="/login" className={`${currentUser?.emailVerified ? "hidden" : ""}`}>
               <p className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900">
                 Login
               </p>
             </Link>
             <Link
               href="/profile"
-              className={`${!State ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
+              className={`${!currentUser?.emailVerified ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
             >
               <p className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900">
                 MyAcount
@@ -162,7 +162,7 @@ const NavBar = () => {
                 Shope
               </p>
             </Link>
-            <Link href="/login" className={`${State ? "hidden" : ""}`}>
+            <Link href="/login" className={`${currentUser?.emailVerified ? "hidden" : ""}`}>
               <p
                 className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900"
                 onClick={() => setMenu(false)}
@@ -172,7 +172,7 @@ const NavBar = () => {
             </Link>
             <Link
               href="/profile"
-              className={`${!State ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
+              className={`${!currentUser?.emailVerified ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
             >
               <p
                 className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900"

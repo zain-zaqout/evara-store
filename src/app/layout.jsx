@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import { ProductsContext } from "../Contexts/ProductsContext";
 import { AuthContext } from "../Contexts/AuthContext";
 import { MenuContext } from "../Contexts/MenuContext";
+import { FormContexts } from "../Contexts/FormContexts";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -47,12 +48,15 @@ export default function RootLayout({
             <ProductsContext>
               <WishlistContext>
                 <CartContext>
-                  <Toaster richColors position="top-right" />
-                  <NavBar />
-                  {children}
-                  <NewSletter />
-                  <Footer />
-                  <FooterBottom />
+                  <FormContexts>
+
+                    <Toaster richColors position="top-right" />
+                    <NavBar />
+                    {children}
+                    <NewSletter />
+                    <Footer />
+                    <FooterBottom />
+                  </FormContexts>
                 </CartContext>
               </WishlistContext>
             </ProductsContext>

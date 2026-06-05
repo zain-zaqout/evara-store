@@ -1,13 +1,14 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
+import { useForm } from "../Contexts/FormContexts";
 import { toast } from "sonner";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
 const ShopingaddressSection = () => {
   const [Loading, setLoading] = useState(false);
-  const { Data, dispatch, currentUser, setaddressData, addressData } =
-    useAuth();
+  const { currentUser, setaddressData, addressData } = useAuth();
+  const { Data, dispatch } = useForm();
 
   async function updateaddress() {
     if (addressData) {
@@ -41,7 +42,7 @@ const ShopingaddressSection = () => {
         address: newAddress,
       });
 
-      toast.success("Done");
+      toast.success("Address updated successfully!");
       dispatch({ type: "flat", val: "" });
       dispatch({ type: "street", val: "" });
       dispatch({ type: "city", val: "" });

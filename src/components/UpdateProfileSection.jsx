@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../Contexts/AuthContext";
+import { useForm } from "../Contexts/FormContexts";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import {
@@ -16,7 +17,8 @@ const UpdateProfileSection = () => {
   const [Loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { Data, dispatch, currentUser, setCurrentUser } = useAuth();
+  const { currentUser, setCurrentUser } = useAuth();
+  const { Data, dispatch } = useForm();
 
   useEffect(() => {
     if (currentUser?.user && Data.user === "") {

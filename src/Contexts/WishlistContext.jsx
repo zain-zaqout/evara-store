@@ -34,9 +34,9 @@ export const WishlistContext = ({ children }) => {
       return toast.error("This Product Has Alrady Added In The Wishilst!");
     }
     setWishlis([newWishlis, ...wishlis]);
+    toast.success(`Product Has Successfully Added In The Wishilst`);
     if (currentUser?.uid) {
       const oldWishlis = [...wishlis];
-      toast.success(`Product Has Successfully Added In The Wishilst`);
       try {
         await addDoc(collection(db, "wishlis"), newWishlis);
       } catch (error) {

@@ -8,7 +8,7 @@ import {
   Loader2,
   Lock,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UpdateProfileSection from "../../components/UpdateProfileSection";
 import OrderSection from "../../components/OrderSection";
 import ShopingaddressSection from "../../components/ShopingAddresSection";
@@ -19,8 +19,8 @@ import { useCart } from "../../Contexts/CartContext";
 import { deleteUser, signOut } from "firebase/auth";
 import { auth, db } from "@/src/lib/firebase";
 import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
-import { deleteCookie } from "cookies-next";
 import { useWishlist } from "@/src/Contexts/WishlistContext";
+import { deleteCookie } from "cookies-next";
 
 const Profile = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -29,9 +29,9 @@ const Profile = () => {
   const [Loading, setLoading] = useState(false);
   const {
     currentUser,
-    setState,
     setaddressData,
     setCurrentUser,
+    isAuthReady,
   } = useAuth();
   const { active, setActive, setItems } = useCart();
   const { setWishlis } = useWishlist()
@@ -93,7 +93,6 @@ const Profile = () => {
       router.replace("/");
       toast.success("Your account has been deleted successfully.");
 
-      setState(false);
       setCurrentUser(null);
 
       setaddressData(null);
@@ -109,17 +108,17 @@ const Profile = () => {
   const logout = async () => {
     setLoading(true)
     try {
+      deleteCookie("firebase_token");
       await signOut(auth);
-      deleteCookie("auth_token")
 
-      setState(false);
+      router.replace("/")
+
       setCurrentUser(null);
       setaddressData(null);
       setItems([])
       setWishlis([])
 
       toast.success("Successfully logged out!");
-      setTimeout(() => router.replace("/"), 100)
     } catch {
       toast.error("Failed to log out. Please try again.");
     } finally {

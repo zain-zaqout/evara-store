@@ -8,10 +8,10 @@ import { LocationEdit } from "lucide-react";
 const Sign = () => {
   const router = useRouter()
   const path = usePathname()
-  const { State } = useAuth();
+  const { currentUser } = useAuth();
   const { setActive } = useCart()
 
-  if (path === "/signup" || path === "/login") return null
+  if (path === "/signup" || path === "/login" || path === "/verify-email") return null
 
   return (
     <>
@@ -20,7 +20,7 @@ const Sign = () => {
           <div
             className={` flex items-center justify-between`}
           >
-            {State ? (
+            {currentUser?.emailVerified ? (
               <>
                 <div className="flex items-center gap-3">
                   <LocationEdit size={35} className="select-none" />

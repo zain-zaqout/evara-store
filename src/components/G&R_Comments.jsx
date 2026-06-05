@@ -12,7 +12,7 @@ const Comments = () => {
   const [Comment, setComment] = useState("");
 
   const { id } = useParams();
-  const { State, currentUser } = useAuth();
+  const { currentUser } = useAuth();
 
   const initialState = {
     data: [],
@@ -300,11 +300,14 @@ const Comments = () => {
                 className="bg-[#088179] flex items-center justify-center border-2 text-center hover:text-[#088179] mt-1 hover:bg-white text-sm font-semibold text-white w-29 h-9 rounded-sm duration-200 cursor-pointer"
                 onClick={() => {
                   if (Comment === "") return false
-                  if (State) {
+                  if (currentUser?.emailVerified) {
                     addReview();
+                  } else if (currentUser && !currentUser?.emailVerified) {
+                    toast.error("Please verify your email to submit a review.");
+                    return
                   } else {
-                    toast.error("You Dont Have an Account!");
-                    return false;
+                    toast.error("Please sign in to your account to submit a review.");
+                    return
                   }
                 }}
               >

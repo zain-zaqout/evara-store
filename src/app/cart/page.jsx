@@ -20,13 +20,15 @@ const page = () => {
     CartTotal,
     Loading
   } = useCart();
-  const { State } = useAuth();
+  const { currentUser } = useAuth();
 
   const GoToCheckOut = () => {
     if (Items.length === 0) {
       return toast.info("Please add items to your cart to proceed to checkout.")
-    } else if (!State) {
+    } else if (!currentUser) {
       return toast.info("Please sign in to your account to complete your order.")
+    } else if (!currentUser?.emailVerified) {
+      return toast.info("Please verify your email to complete your order.")
     } else {
       router.push("/checkout");
     }

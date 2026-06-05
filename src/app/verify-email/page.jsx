@@ -3,18 +3,27 @@ import { AlertCircle, ArrowLeft, CheckCircle2, Loader2, Mail, RotateCcw } from '
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { signInWithEmailAndPassword, sendEmailVerification, signOut } from 'firebase/auth'
-import { auth } from '@/src/lib/firebase'
+import { sendEmailVerification } from 'firebase/auth'
+import { getDoc, doc, addDoc, collection } from 'firebase/firestore'
+import { auth, db } from '@/src/lib/firebase'
+import { useAuth } from "@/src/Contexts/AuthContext";
+import { useCart } from "@/src/Contexts/CartContext";
+import { useWishlist } from "@/src/Contexts/WishlistContext";
+import { setCookie } from "cookies-next";
+import { FullPageLoader } from "@/src/components/FullPageLoader";
 
-const UnverifiedAccount = ({ user, onBack }) => {
+const Page = () => {
     const router = useRouter()
 
-    const COOLDOWN = 60
+    const COOLDOWN = 90
     const [cooldown, setCooldown] = useState(0)
     const [isResending, setIsResending] = useState(false)
     const [resendStatus, setResendStatus] = useState(null)
     const [isChecking, setIsChecking] = useState(false)
 
+    const { isAuthReady, currentUser, setCurrentUser } = useAuth()
+    const { setItems } = useCart()
+    const { setWishlis } = useWishlist()
 
     useEffect(() => {
         if (cooldown <= 0) return
@@ -22,82 +31,152 @@ const UnverifiedAccount = ({ user, onBack }) => {
         return () => clearTimeout(interval)
     }, [cooldown])
 
-    const handleResend = async () => {
-        if (cooldown > 0) return
-        setIsResending(true)
-        try {
+    useEffect(() => {
+        const lastSent = localStorage.getItem("lastVerificationSent");
 
-            const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password)
-            const freshUser = userCredential.user
-            await sendEmailVerification(freshUser)
-            await signOut(auth)
+        if (!lastSent) return;
 
-            setResendStatus("success")
-            setCooldown(COOLDOWN)
-        } catch {
-            setResendStatus("failed")
-        } finally {
-            setIsResending(false)
+        const elapsed = Math.floor((Date.now() - Number(lastSent)) / 1000);
+
+        if (elapsed < 90) {
+            setCooldown(90 - elapsed);
         }
-    }
+    }, []);
+
+    const handleResend = async () => {
+        if (cooldown > 0 || isResending) return;
+
+        const lastSent = Number(localStorage.getItem("lastVerificationSent"));
+        if (lastSent && Date.now() - lastSent < COOLDOWN * 1000) {
+            toast.error("Please wait before resending.");
+            return;
+        }
+
+        setIsResending(true);
+
+        try {
+            const freshUser = auth.currentUser;
+
+            if (!freshUser) {
+                toast.error("Please sign in again.");
+                return;
+            }
+
+            await sendEmailVerification(freshUser);
+
+            localStorage.setItem("lastVerificationSent", Date.now());
+            setCooldown(COOLDOWN);
+            setResendStatus("success");
+
+        } catch (error) {
+            setResendStatus("failed");
+
+            if (error.code === "auth/too-many-requests") {
+                toast.error("Too many requests. Try later.");
+            } else {
+                toast.error("Failed to send email.");
+            }
+
+        } finally {
+            setIsResending(false);
+        }
+    };
 
     const handleCheckVerified = async () => {
-        const localWishlis = localStorage.getItem("wishlis")
-        const localCart = localStorage.getItem("cart")
-        setIsChecking(true)
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password)
-            const freshUser = userCredential.user
+        if (isChecking) return;
 
-            if (freshUser.emailVerified) {
+        setIsChecking(true);
+
+        try {
+            const freshUser = auth.currentUser;
+
+            if (!freshUser) {
+                toast.error("Please sign in again.");
+                return;
+            }
+
+            await freshUser.reload();
+
+            const updatedUser = freshUser;
+
+            if (updatedUser.emailVerified) {
+                const token = await updatedUser.getIdToken();
+                setCookie("firebase_token", token, {
+                    maxAge: 60 * 60 * 24 * 7,
+                    path: "/",
+                });
+
+                const localWishlis = localStorage.getItem("wishlis");
+                const localCart = localStorage.getItem("cart");
 
                 if (localWishlis) {
-                    const localData = JSON.parse(localWishlis);
-                    const addFnction = localData.map((item) => {
-                        return addDoc(collection(db, "wishlis"), { ...item, userId: user.uid });
-                    });
+                    const data = JSON.parse(localWishlis);
 
-                    await Promise.all(addFnction);
-                    setWishlis(localData || [])
+                    await Promise.all(
+                        data.map(item =>
+                            addDoc(collection(db, "wishlis"), {
+                                ...item,
+                                userId: updatedUser.uid,
+                            })
+                        )
+                    );
+
+                    setWishlis(data);
                     localStorage.removeItem("wishlis");
                 }
 
                 if (localCart) {
-                    const localData = JSON.parse(localCart);
-                    const addFnction = localData.map((item) => {
-                        return addDoc(collection(db, "cart"), { ...item, userId: user.uid });
-                    });
+                    const data = JSON.parse(localCart);
 
-                    await Promise.all(addFnction);
-                    setItems(localData || [])
+                    await Promise.all(
+                        data.map(item =>
+                            addDoc(collection(db, "cart"), {
+                                ...item,
+                                userId: updatedUser.uid,
+                            })
+                        )
+                    );
+
+                    setItems(data);
                     localStorage.removeItem("cart");
                 }
 
-                setCookie("auth_token", "true", {
-                    maxAge: 60 * 60 * 24 * 7,
-                    path: "/",
-                    sameSite: 'lax',
-                });
-
-                const userDoc = await getDoc(doc(db, "users", user.uid));
+                const userDoc = await getDoc(doc(db, "users", updatedUser.uid));
 
                 if (userDoc.exists()) {
-                    setCurrentUser({ ...user, ...userDoc.data() });
-                    setState(true);
+                    setCurrentUser({ ...updatedUser, ...userDoc.data() });
                 }
 
-                onBack()
-                router.replace("/")
+                localStorage.removeItem("lastVerificationSent");
+                toast.success("Email verified successfully. Welcome!");
+                router.replace("/");
+
             } else {
-                toast.error("Your email is still not verified. Please check your inbox.")
-                await signOut(auth)
+                toast.error("Email not verified yet.");
             }
+
         } catch {
-            setResendStatus("failed")
-            toast.error("Something went wrong.")
+            toast.error("Something went wrong.");
         } finally {
-            setIsChecking(false)
+            setIsChecking(false);
         }
+    };
+
+    useEffect(() => {
+        if (!isAuthReady) return;
+
+        if (!currentUser) {
+            router.replace("/login");
+            return;
+        }
+
+        if (currentUser.emailVerified) {
+            router.replace("/");
+            return;
+        }
+    }, [isAuthReady, currentUser, router]);
+    if (!isAuthReady || !currentUser) {
+        return <FullPageLoader />;
     }
 
     return (
@@ -105,7 +184,7 @@ const UnverifiedAccount = ({ user, onBack }) => {
 
             <div className="fixed top-0 left-0 mx-10 flex items-center py-5">
                 <button
-                    onClick={onBack}
+                    onClick={() => router.push("/")}
                     className="flex items-center group gap-0.75 cursor-pointer duration-200 py-1 px-2.5 rounded-md"
                 >
                     <ArrowLeft size={16} className="text-gray-500 group-hover:text-slate-900 group-hover:-translate-x-1 duration-100" />
@@ -136,7 +215,7 @@ const UnverifiedAccount = ({ user, onBack }) => {
                     <h1 className='text-4xl pb-3 text-slate-950'>Check your inbox</h1>
                     <p className='text-[14.5px] text-gray-500'>We sent a verification link to</p>
                     <span className='text-sm text-slate-950' style={{ fontWeight: 700 }}>
-                        {user.email}
+                        {currentUser?.email}
                     </span>
                 </div>
 
@@ -174,7 +253,7 @@ const UnverifiedAccount = ({ user, onBack }) => {
                     </button>
 
                     <button
-                        onClick={handleResend}
+                        onClick={() => handleResend()}
                         disabled={isResending || cooldown > 0}
                         className="w-full h-12 mt-3 flex items-center justify-center gap-2 rounded-2xl border-2 border-gray-300 text-foreground font-semibold text-sm transition-all duration-200 hover:border-[#007f7b] hover:text-[#007f7b] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
@@ -217,4 +296,4 @@ const UnverifiedAccount = ({ user, onBack }) => {
     )
 }
 
-export default UnverifiedAccount
+export default Page

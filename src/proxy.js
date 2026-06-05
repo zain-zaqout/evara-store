@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export function proxy(request) {
-  const token = request.cookies.get("auth_token")?.value;
+  const token = request.cookies.get("firebase_token")?.value;
   const { pathname } = request.nextUrl;
 
   const publicPaths = ["/login", "/signup"];
@@ -12,11 +12,11 @@ export function proxy(request) {
     pathname.startsWith(path),
   );
 
-  if (!token && isProtectedPath) {
+  if (isProtectedPath && !token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (token && isPublicPath) {
+  if (isPublicPath && token) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

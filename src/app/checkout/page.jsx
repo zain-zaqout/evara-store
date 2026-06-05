@@ -3,21 +3,22 @@ import Link from "next/link";
 import { useCart } from "../../Contexts/CartContext";
 import { useAuth } from "../../Contexts/AuthContext";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, serverTimestamp, where } from "firebase/firestore";
 import { db } from "@/src/lib/firebase";
 import { Loader2 } from "lucide-react";
 import { FullPageLoader } from "@/src/components/FullPageLoader";
 
 const CheckOut = () => {
   const router = useRouter();
+  const path = usePathname();
 
   const [Loading, setLoading] = useState(false);
   const [isChecking, setIsChecking] = useState(true)
   const [isOrderCompleted, setisOrderCompleted] = useState(false)
 
-  const { currentUser, addressData } = useAuth();
+  const { currentUser, addressData, isAuthReady } = useAuth();
   const { Items, setItems, Total, CartTotal, DeleveryTotal, setActive } =
     useCart();
 
@@ -49,6 +50,19 @@ const CheckOut = () => {
         total: Total,
       };
 
+      const q = query(
+        collection(db, "cart"),
+        where("userId", "==", currentUser.uid)
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      await Promise.all(
+        querySnapshot.docs.map((item) =>
+          deleteDoc(doc(db, "cart", item.id))
+        )
+      );
+
       await addDoc(collection(db, "orders"), orderData);
       setisOrderCompleted(true)
 
@@ -69,7 +83,7 @@ const CheckOut = () => {
     } else {
       setIsChecking(false)
     }
-  }, [router, Items])
+  }, [Items, router, isOrderCompleted])
 
   const billingName = currentUser?.user ?? "";
   const billingEmail = currentUser?.email ?? "";
@@ -79,12 +93,20 @@ const CheckOut = () => {
   const billingCity = addressData?.city ?? "";
   const billingCountry = addressData?.country ?? "";
 
-  if (isChecking) {
-    return (
-      <FullPageLoader />
-    )
-  }
 
+  useEffect(() => {
+    if (!isAuthReady) return
+
+    if (!currentUser) {
+      return toast.info("Please sign in to your account to complete your order.")
+    } else if (!currentUser?.emailVerified) {
+      return toast.info("Please verify your email to complete your order.")
+    }
+  }, [isAuthReady, currentUser, path])
+
+  if (isChecking || !isAuthReady) {
+    return <FullPageLoader />
+  }
   return (
     <>
       <div className="bg-gray-200 h-16 flex">

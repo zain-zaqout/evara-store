@@ -4,9 +4,9 @@ import { useAuth } from "../Contexts/AuthContext";
 import { usePathname } from "next/navigation";
 const Footer = () => {
   const pathname = usePathname();
-  const { State } = useAuth();
-  const isAuthPage = ["/login", "/signup"].includes(pathname.toLowerCase());
-  if (isAuthPage) return null;
+  const { currentUser } = useAuth();
+
+  if (pathname === "/login" || pathname === "/signup" || pathname === "/verify-email") return null;
 
   return (
     <>
@@ -105,7 +105,7 @@ const Footer = () => {
             </div>
             <div className="flex flex-col gap-0.5 pt-1.5 text-gray-500 text-base">
               <p className="hover:pl-0.5 hover:text-[#088179] duration-200 block">
-                <Link href="/login" className={`${State ? "hidden" : "block"}`}>
+                <Link href="/login" className={`${currentUser?.emailVerified ? "hidden" : "block"}`}>
                   <span>Sign in</span>
                 </Link>
               </p>

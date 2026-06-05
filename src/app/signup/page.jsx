@@ -1,12 +1,9 @@
 "use client";
 import Link from "next/link";
-import { useAuth } from "../../Contexts/AuthContext";
-import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import {
-  addDoc,
   collection,
   doc,
   getDocs,
@@ -14,28 +11,25 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
+import { useEffect, useRef, useState } from "react";
 import { auth, db } from "@/src/lib/firebase";
-import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from "firebase/auth";
-import { useWishlist } from "@/src/Contexts/WishlistContext";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { useForm } from "@/src/Contexts/FormContexts";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
 
   const [Loading, setLoading] = useState(false);
-  const { Data, dispatch } =
-    useAuth();
-  const { setWishlis } = useWishlist();
+  const { Data, dispatch } = useForm();
 
   const checkData = async () => {
-    const passwordValue = Data.password?.trim();
-    const userValue = Data.user?.trim();
-    const emailValue = Data.email?.trim();
+    const passwordValue = Data.password?.trim() || ""
+    const userValue = Data.user?.trim() || ""
+    const emailValue = Data.email?.trim() || ""
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const localWishlis = localStorage.getItem("wishlis");
-    const localCart = localStorage.getItem("cart");
 
     if (userValue.length < 3) {
-      return toast.error("Name must be exactly 3 characters");
+      return toast.error("Name must be at least 3 characters");
     } else if (!emailRegex.test(emailValue)) {
       return toast.error(
         "Invalid email address! Please check the format (name@mail.com).",
@@ -63,10 +57,11 @@ const page = () => {
         emailValue,
         passwordValue,
       );
+
       const user = userCredential.user;
       const userData = {
         user: userValue,
-        email: emailValue.toLowerCase(),
+        email: emailValue,
         address: {
           flat: "",
           street: "",
@@ -76,34 +71,15 @@ const page = () => {
       };
 
       await setDoc(doc(db, "users", user.uid), userData);
-      if (localWishlis) {
-        const localData = JSON.parse(localWishlis);
-        const addFnction = localData.map((item) => {
-          return addDoc(collection(db, "wishlis"), { ...item, userId: user.uid });
-        });
-        await Promise.all(addFnction);
-        setWishlis(localData || [])
-        localStorage.removeItem("wishlis");
-      }
 
-      if (localCart) {
-        const localData = JSON.parse(localCart);
-        const addFnction = localData.map((item) => {
-          return addDoc(collection(db, "cart"), { ...item, userId: user.uid });
-        });
-        await Promise.all(addFnction);
-        setWishlis(localData || [])
-        localStorage.removeItem("cart");
-      }
       await sendEmailVerification(user)
-      await signOut(auth)
       toast.success("Verification email sent! Check your inbox at " + user.email)
 
       dispatch({ type: "user", val: "" });
       dispatch({ type: "email", val: "" });
       dispatch({ type: "password", val: "" });
 
-      router.push("/login")
+      router.push("/verify-email")
 
     } catch (error) {
       switch (error.code) {
@@ -230,4 +206,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
