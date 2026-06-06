@@ -96,7 +96,7 @@ const UpdateProfileSection = () => {
               <div className="flex flex-col space-y-2.5 py-3">
                 <input
                   type="text"
-                  value={Data.user}
+                  value={Data?.user}
                   onChange={(e) =>
                     dispatch({ type: "user", val: e.target.value })
                   }

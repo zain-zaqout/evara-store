@@ -42,6 +42,29 @@ const Sign = () => {
                 </div>
               </>
 
+            ) : !currentUser?.emailVerified && currentUser ? (
+              <>
+                <div className="flex items-center gap-1">
+                  <img
+                    className="w-10 select-none"
+                    src="/assets/images/icon-email.svg"
+                    alt=""
+                  />
+                  <p className="font-extrabold">Verify Your Email</p>
+                </div>
+                <div className="pr-10">
+                  <p className="text-gray-600 hidden min-[840px]:block">
+                    Please Verify Your Email For Contnue Shopping...
+                  </p>
+                </div>
+                <div>
+                  <Link href="/verify-email">
+                    <button className="bg-gray-900 text-sm text-white font-semibold w-18 h-9 rounded-[3px] cursor-pointer select-none hover:bg-[#088179] duration-300">
+                      Varify
+                    </button>
+                  </Link>
+                </div>
+              </>
             ) : (
               <>
                 <div className="flex items-center gap-1">

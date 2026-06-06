@@ -4,7 +4,7 @@ export function proxy(request) {
   const token = request.cookies.get("firebase_token")?.value;
   const { pathname } = request.nextUrl;
 
-  const publicPaths = ["/login", "/signup"];
+  const publicPaths = ["/login", "/signup", "/verify-email"];
   const isPublicPath = publicPaths.includes(pathname);
 
   const protectedPaths = ["/checkout", "/profile"];

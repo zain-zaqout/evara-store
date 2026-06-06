@@ -14,7 +14,7 @@ export const CartContext = ({ children }) => {
   const { currentUser } = useAuth()
 
   useEffect(() => {
-    if (currentUser?.uid) {
+    if (currentUser?.emailVerified) {
       const getData = async () => {
         setLoading(true);
         try {
@@ -64,7 +64,7 @@ export const CartContext = ({ children }) => {
     const oldCart = [...Items];
     setItems([newCart, ...Items]);
     toast.success(`Product Has Successfully Added In The Cart`);
-    if (currentUser?.uid) {
+    if (currentUser?.emailVerified) {
       try {
         await addDoc(collection(db, "cart"), newCart);
       } catch (error) {
@@ -87,12 +87,8 @@ export const CartContext = ({ children }) => {
 
     setItems(fill);
 
-    if (currentUser?.uid) {
-      if (fill.length === 0) {
-        toast.success(`Product Has Successfully Removed From The Cart`);
-      } else {
-        toast.success(`Product Has Successfully Removed From The Cart`);
-      }
+    toast.success(`Product Has Successfully Removed From The Cart`);
+    if (currentUser?.emailVerified) {
 
       try {
         if (itemToRemove?.id && !itemToRemove?.productId) {
@@ -136,7 +132,7 @@ export const CartContext = ({ children }) => {
         : item,
     );
     setItems(newCart);
-    if (currentUser?.uid) {
+    if (currentUser?.emailVerified) {
       try {
         const q = query(collection(db, "cart"), where("id", "==", id));
         const querySnapshot = await getDocs(q);
@@ -174,7 +170,7 @@ export const CartContext = ({ children }) => {
         : item,
     );
     setItems(newCart);
-    if (currentUser?.uid) {
+    if (currentUser?.emailVerified) {
       try {
         const q = query(collection(db, "cart"), where("id", "==", id));
         const querySnapshot = await getDocs(q);

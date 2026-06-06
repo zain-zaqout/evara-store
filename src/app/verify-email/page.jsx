@@ -104,6 +104,8 @@ const Page = () => {
                 setCookie("firebase_token", token, {
                     maxAge: 60 * 60 * 24 * 7,
                     path: "/",
+                    secure: true,
+                    sameSite: "lax",
                 });
 
                 const localWishlis = localStorage.getItem("wishlis");
@@ -113,28 +115,48 @@ const Page = () => {
                     const data = JSON.parse(localWishlis);
 
                     await Promise.all(
-                        data.map(item =>
-                            addDoc(collection(db, "wishlis"), {
-                                ...item,
-                                userId: updatedUser.uid,
-                            })
-                        )
+                        data.map(async (item) => {
+                            const q = query(
+                                collection(db, "wishlis"),
+                                where("userId", "==", updatedUser.uid),
+                                where("productId", "==", item.productId)
+                            );
+
+                            const querySnapshot = await getDocs(q);
+
+                            if (querySnapshot.empty) {
+                                return addDoc(collection(db, "wishlis"), {
+                                    ...item,
+                                    userId: updatedUser.uid,
+                                });
+                            }
+                        })
                     );
 
-                    setWishlis(data);
-                    localStorage.removeItem("wishlis");
+                    setItems(data);
+                    localStorage.removeItem("cart");
                 }
 
                 if (localCart) {
                     const data = JSON.parse(localCart);
 
                     await Promise.all(
-                        data.map(item =>
-                            addDoc(collection(db, "cart"), {
-                                ...item,
-                                userId: updatedUser.uid,
-                            })
-                        )
+                        data.map(async (item) => {
+                            const q = query(
+                                collection(db, "cart"),
+                                where("userId", "==", updatedUser.uid),
+                                where("productId", "==", item.productId)
+                            );
+
+                            const querySnapshot = await getDocs(q);
+
+                            if (querySnapshot.empty) {
+                                return addDoc(collection(db, "cart"), {
+                                    ...item,
+                                    userId: updatedUser.uid,
+                                });
+                            }
+                        })
                     );
 
                     setItems(data);
@@ -149,7 +171,7 @@ const Page = () => {
 
                 localStorage.removeItem("lastVerificationSent");
                 toast.success("Email verified successfully. Welcome!");
-                router.replace("/");
+                setTimeout(() => router.replace("/"), 100)
 
             } else {
                 toast.error("Email not verified yet.");

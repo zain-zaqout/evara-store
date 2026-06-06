@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/src/lib/firebase";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { useWishlist } from "@/src/Contexts/WishlistContext";
 import { useCart } from "@/src/Contexts/CartContext";
 import { useForm } from "@/src/Contexts/FormContexts";
@@ -55,8 +55,12 @@ const Page = () => {
 
       if (localWishlis) {
         const localData = JSON.parse(localWishlis);
-        const addFnction = localData.map((item) => {
-          return addDoc(collection(db, "wishlis"), { ...item, userId: user.uid });
+        const addFnction = localData.map(async (item) => {
+          const q = query(collection(db, "wishlis"), where("userId", "==", user.uid), where("productId", "==", item.productId));
+          const querySnapshot = await getDocs(q);
+          if (querySnapshot.empty) {
+            return addDoc(collection(db, "wishlis"), { ...item, userId: user.uid });
+          }
         });
 
         await Promise.all(addFnction);
@@ -66,8 +70,12 @@ const Page = () => {
 
       if (localCart) {
         const localData = JSON.parse(localCart);
-        const addFnction = localData.map((item) => {
-          return addDoc(collection(db, "cart"), { ...item, userId: user.uid });
+        const addFnction = localData.map(async (item) => {
+          const q = query(collection(db, "cart"), where("userId", "==", user.uid), where("productId", "==", item.productId));
+          const querySnapshot = await getDocs(q);
+          if (querySnapshot.empty) {
+            return addDoc(collection(db, "cart"), { ...item, userId: user.uid });
+          }
         });
 
         await Promise.all(addFnction);

@@ -35,7 +35,7 @@ export const WishlistContext = ({ children }) => {
     }
     setWishlis([newWishlis, ...wishlis]);
     toast.success(`Product Has Successfully Added In The Wishilst`);
-    if (currentUser?.uid) {
+    if (currentUser?.emailVerified) {
       const oldWishlis = [...wishlis];
       try {
         await addDoc(collection(db, "wishlis"), newWishlis);
@@ -49,7 +49,7 @@ export const WishlistContext = ({ children }) => {
   };
 
   useEffect(() => {
-    if (currentUser?.uid) {
+    if (currentUser?.emailVerified) {
       const getData = async () => {
         setLoading(true);
         try {
@@ -77,7 +77,7 @@ export const WishlistContext = ({ children }) => {
       }
       setLoading(false);
     }
-  }, [currentUser?.uid]);
+  }, [currentUser?.emailVerified]);
 
   const RemoveFromWishlis = async (targetId) => {
     const oldWishlis = [...wishlis];
@@ -93,11 +93,9 @@ export const WishlistContext = ({ children }) => {
     setWishlis(fill);
     if (fill.length === 0) {
       toast.success(`Product Has Successfully Removed From The Wishilst`);
-    } else {
-      toast.success(`Product Has Successfully Removed From The Wishilst`);
     }
 
-    if (currentUser?.uid) {
+    if (currentUser?.emailVerified) {
 
       try {
         const q = query(

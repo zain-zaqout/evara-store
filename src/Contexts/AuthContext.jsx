@@ -7,8 +7,9 @@ import {
   useEffect,
 } from "react";
 import { auth, db } from "../lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { FullPageLoader } from "../components/FullPageLoader";
+import { setCookie } from "cookies-next";
 
 export const Context = createContext();
 
@@ -23,7 +24,7 @@ export const AuthContext = ({ children }) => {
       if (user) {
         try {
           const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists()) {
+          if (userDoc.exists() && user?.emailVerified) {
             const userData = userDoc.data();
             const resolvedAddress = userData.address ?? userData.addresss ?? {
               flat: userData.flat ?? "",
@@ -32,8 +33,51 @@ export const AuthContext = ({ children }) => {
               country: userData.country ?? "",
             };
 
+            const token = await user.getIdToken();
+
+            const localWishlis = localStorage.getItem("wishlis");
+            const localCart = localStorage.getItem("cart");
+
+            if (localWishlis && localWishlis !== "[]") {
+              const data = JSON.parse(localWishlis);
+
+              await Promise.all(
+                data.map(item =>
+                  addDoc(collection(db, "wishlis"), {
+                    ...item,
+                    userId: user.uid,
+                  })
+                )
+              );
+
+              localStorage.removeItem("wishlis");
+            }
+
+            if (localCart && localCart !== "[]") {
+              const data = JSON.parse(localCart);
+
+              await Promise.all(
+                data.map(item =>
+                  addDoc(collection(db, "cart"), {
+                    ...item,
+                    userId: user.uid,
+                  })
+                )
+              );
+
+              localStorage.removeItem("cart");
+            }
+
+            setCookie("firebase_token", token, {
+              maxAge: 60 * 60 * 24 * 7,
+              path: "/",
+              secure: true,
+              sameSite: "lax",
+            });
+
             setCurrentUser({ ...user, ...userData, address: resolvedAddress });
             setaddressData(resolvedAddress);
+
           } else {
             setCurrentUser(user);
           }

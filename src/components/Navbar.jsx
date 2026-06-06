@@ -45,19 +45,19 @@ const NavBar = () => {
                 Shope
               </p>
             </Link>
-            <Link href="/login" className={`${currentUser?.emailVerified ? "hidden" : ""}`}>
+            <Link href={currentUser?.emailVerified && currentUser ? "/profile" : "/login"}>
               <p className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900">
-                Login
+                {currentUser?.emailVerified ? "My Account" : "Login"}
               </p>
             </Link>
-            <Link
+            {/* <Link
               href="/profile"
               className={`${!currentUser?.emailVerified ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
             >
               <p className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900">
                 MyAcount
               </p>
-            </Link>
+            </Link> */}
           </nav>
           <div className="flex items-center gap-3">
             <div className="relative">
