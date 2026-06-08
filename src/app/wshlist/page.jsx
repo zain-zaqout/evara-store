@@ -89,7 +89,7 @@ const page = () => {
               <tr key={item.productId} className="border-b border-gray-200 hover:bg-gray-50/60">
                 <td className="text-center py-4">
                   <Zoom zoomMargin={20}>
-                    <img src={item.firstImage} className="w-20 mx-auto" alt="" />
+                    <img src={item.firstImage} className="w-20 mx-auto select-none" alt="" />
                   </Zoom>
                 </td>
                 <td className="text-center py-4">

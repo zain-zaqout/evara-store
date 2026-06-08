@@ -7,9 +7,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/src/lib/firebase";
-import { addDoc, collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { useWishlist } from "@/src/Contexts/WishlistContext";
-import { useCart } from "@/src/Contexts/CartContext";
+import { doc, getDoc } from "firebase/firestore";
 import { useForm } from "@/src/Contexts/FormContexts";
 import { setCookie } from "cookies-next";
 
@@ -19,15 +17,11 @@ const Page = () => {
   const [Loading, setLoading] = useState(false);
   const { setCurrentUser } = useAuth();
   const { Data, dispatch } = useForm();
-  const { setWishlis } = useWishlist();
-  const { setItems } = useCart()
 
   async function checkData() {
     const emailValue = Data.email?.trim() || ""
     const passwordValue = Data.password?.trim() || ""
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const localWishlis = localStorage.getItem("wishlis")
-    const localCart = localStorage.getItem("cart")
 
     if (!emailRegex.test(emailValue)) {
       return toast.error("Invalid email address!");
@@ -52,37 +46,6 @@ const Page = () => {
         return
       }
 
-
-      if (localWishlis) {
-        const localData = JSON.parse(localWishlis);
-        const addFnction = localData.map(async (item) => {
-          const q = query(collection(db, "wishlis"), where("userId", "==", user.uid), where("productId", "==", item.productId));
-          const querySnapshot = await getDocs(q);
-          if (querySnapshot.empty) {
-            return addDoc(collection(db, "wishlis"), { ...item, userId: user.uid });
-          }
-        });
-
-        await Promise.all(addFnction);
-        setWishlis(localData || [])
-        localStorage.removeItem("wishlis");
-      }
-
-      if (localCart) {
-        const localData = JSON.parse(localCart);
-        const addFnction = localData.map(async (item) => {
-          const q = query(collection(db, "cart"), where("userId", "==", user.uid), where("productId", "==", item.productId));
-          const querySnapshot = await getDocs(q);
-          if (querySnapshot.empty) {
-            return addDoc(collection(db, "cart"), { ...item, userId: user.uid });
-          }
-        });
-
-        await Promise.all(addFnction);
-        setItems(localData || [])
-        localStorage.removeItem("cart");
-      }
-
       const userDoc = await getDoc(doc(db, "users", user.uid));
 
       if (userDoc.exists()) {
@@ -100,6 +63,10 @@ const Page = () => {
         secure: true,
         sameSite: "lax",
       });
+
+      localStorage.removeItem("firstVerificationSent");
+      localStorage.removeItem("lastVerificationSent");
+
       setTimeout(() => router.replace("/"), 100)
 
     } catch (error) {

@@ -48,8 +48,8 @@ const ShopingaddressSection = () => {
       dispatch({ type: "city", val: "" });
       dispatch({ type: "country", val: "" });
 
-    } catch (error) {
-      toast.error(error.message);
+    } catch {
+      toast.error("something went wrong");
     } finally {
       setLoading(false);
     }

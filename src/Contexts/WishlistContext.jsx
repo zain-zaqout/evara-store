@@ -9,6 +9,7 @@ import {
   query,
   where,
   deleteDoc,
+  doc
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
@@ -19,6 +20,76 @@ export const WishlistContext = ({ children }) => {
   const [Loading, setLoading] = useState(true)
 
   const { currentUser } = useAuth();
+
+  useEffect(() => {
+    async function handel() {
+      if (currentUser?.emailVerified && currentUser?.uid) {
+        await merageCart()
+      }
+      await getData()
+    }
+    handel()
+  }, [currentUser?.emailVerified, currentUser?.uid]);
+
+  const merageCart = async () => {
+    const local = localStorage.getItem("wishlis");
+
+    if (!local) return;
+
+    const localData = JSON.parse(local);
+
+    localStorage.removeItem("wishlis");
+
+    if (Array.isArray(localData) && localData.length > 0) {
+      await Promise.all(
+        localData.map(async (i) => {
+          const q = query(
+            collection(db, "wishlis"),
+            where("userId", "==", currentUser.uid),
+            where("productId", "==", i.id)
+          );
+
+          const snap = await getDocs(q);
+
+          if (snap.empty) {
+            await addDoc(collection(db, "wishlis"), {
+              ...i,
+              userId: currentUser.uid,
+            });
+          }
+        })
+      );
+
+    }
+  };
+
+  const getData = async () => {
+    if (currentUser?.emailVerified) {
+      setLoading(true);
+      try {
+        const q = query(
+          collection(db, "wishlis"),
+          where("userId", "==", currentUser.uid),
+        );
+        const Data = await getDocs(q);
+        const finleData = Data.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setWishlis(finleData);
+      } catch {
+        toast.error("something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      const local = localStorage.getItem("wishlis");
+      if (local) {
+        setWishlis(JSON.parse(local));
+      }
+      setLoading(false);
+    }
+  };
 
   const addToWishlis = async (product) => {
     const exi = wishlis.find((i) => product.id === i.productId);
@@ -40,44 +111,13 @@ export const WishlistContext = ({ children }) => {
       try {
         await addDoc(collection(db, "wishlis"), newWishlis);
       } catch (error) {
-        toast.error(error.message);
+        toast.error("something went wrong");
         setWishlis(oldWishlis);
       }
     } else {
       localStorage.setItem("wishlis", JSON.stringify([newWishlis, ...wishlis]));
     }
   };
-
-  useEffect(() => {
-    if (currentUser?.emailVerified) {
-      const getData = async () => {
-        setLoading(true);
-        try {
-          const q = query(
-            collection(db, "wishlis"),
-            where("userId", "==", currentUser.uid),
-          );
-          const Data = await getDocs(q);
-          const finleData = Data.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setWishlis(finleData);
-        } catch (error) {
-          toast.error(error.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-      getData();
-    } else {
-      const local = localStorage.getItem("wishlis");
-      if (local) {
-        setWishlis(JSON.parse(local));
-      }
-      setLoading(false);
-    }
-  }, [currentUser?.emailVerified]);
 
   const RemoveFromWishlis = async (targetId) => {
     const oldWishlis = [...wishlis];
@@ -111,8 +151,8 @@ export const WishlistContext = ({ children }) => {
         );
 
         await Promise.all(deletePromises);
-      } catch (error) {
-        toast.error("Database Error: " + error.message);
+      } catch {
+        toast.error("something went wrong");
         setWishlis(oldWishlis);
       }
     } else {

@@ -35,39 +35,6 @@ export const AuthContext = ({ children }) => {
 
             const token = await user.getIdToken();
 
-            const localWishlis = localStorage.getItem("wishlis");
-            const localCart = localStorage.getItem("cart");
-
-            if (localWishlis && localWishlis !== "[]") {
-              const data = JSON.parse(localWishlis);
-
-              await Promise.all(
-                data.map(item =>
-                  addDoc(collection(db, "wishlis"), {
-                    ...item,
-                    userId: user.uid,
-                  })
-                )
-              );
-
-              localStorage.removeItem("wishlis");
-            }
-
-            if (localCart && localCart !== "[]") {
-              const data = JSON.parse(localCart);
-
-              await Promise.all(
-                data.map(item =>
-                  addDoc(collection(db, "cart"), {
-                    ...item,
-                    userId: user.uid,
-                  })
-                )
-              );
-
-              localStorage.removeItem("cart");
-            }
-
             setCookie("firebase_token", token, {
               maxAge: 60 * 60 * 24 * 7,
               path: "/",

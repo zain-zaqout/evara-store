@@ -73,6 +73,7 @@ const Page = () => {
       await setDoc(doc(db, "users", user.uid), userData);
 
       await sendEmailVerification(user)
+      localStorage.setItem("firstVerificationSent", Date.now());
       toast.success("Verification email sent! Check your inbox at " + user.email)
 
       dispatch({ type: "user", val: "" });

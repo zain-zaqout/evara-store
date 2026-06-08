@@ -4,11 +4,9 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { sendEmailVerification } from 'firebase/auth'
-import { getDoc, doc, addDoc, collection } from 'firebase/firestore'
+import { getDoc, doc } from 'firebase/firestore'
 import { auth, db } from '@/src/lib/firebase'
 import { useAuth } from "@/src/Contexts/AuthContext";
-import { useCart } from "@/src/Contexts/CartContext";
-import { useWishlist } from "@/src/Contexts/WishlistContext";
 import { setCookie } from "cookies-next";
 import { FullPageLoader } from "@/src/components/FullPageLoader";
 
@@ -22,8 +20,6 @@ const Page = () => {
     const [isChecking, setIsChecking] = useState(false)
 
     const { isAuthReady, currentUser, setCurrentUser } = useAuth()
-    const { setItems } = useCart()
-    const { setWishlis } = useWishlist()
 
     useEffect(() => {
         if (cooldown <= 0) return
@@ -32,14 +28,29 @@ const Page = () => {
     }, [cooldown])
 
     useEffect(() => {
-        const lastSent = localStorage.getItem("lastVerificationSent");
+        const lastResend = localStorage.getItem("lastVerificationSent");
 
-        if (!lastSent) return;
+        if (lastResend) {
+            const elapsed = Math.floor(
+                (Date.now() - Number(lastResend)) / 1000
+            );
 
-        const elapsed = Math.floor((Date.now() - Number(lastSent)) / 1000);
+            if (elapsed < 90) {
+                setCooldown(90 - elapsed);
+                return;
+            }
+        }
 
-        if (elapsed < 90) {
-            setCooldown(90 - elapsed);
+        const firstSent = localStorage.getItem("firstVerificationSent");
+
+        if (firstSent) {
+            const elapsed = Math.floor(
+                (Date.now() - Number(firstSent)) / 1000
+            );
+
+            if (elapsed < 60) {
+                setCooldown(60 - elapsed);
+            }
         }
     }, []);
 
@@ -100,6 +111,7 @@ const Page = () => {
             const updatedUser = freshUser;
 
             if (updatedUser.emailVerified) {
+
                 const token = await updatedUser.getIdToken();
                 setCookie("firebase_token", token, {
                     maxAge: 60 * 60 * 24 * 7,
@@ -108,61 +120,6 @@ const Page = () => {
                     sameSite: "lax",
                 });
 
-                const localWishlis = localStorage.getItem("wishlis");
-                const localCart = localStorage.getItem("cart");
-
-                if (localWishlis) {
-                    const data = JSON.parse(localWishlis);
-
-                    await Promise.all(
-                        data.map(async (item) => {
-                            const q = query(
-                                collection(db, "wishlis"),
-                                where("userId", "==", updatedUser.uid),
-                                where("productId", "==", item.productId)
-                            );
-
-                            const querySnapshot = await getDocs(q);
-
-                            if (querySnapshot.empty) {
-                                return addDoc(collection(db, "wishlis"), {
-                                    ...item,
-                                    userId: updatedUser.uid,
-                                });
-                            }
-                        })
-                    );
-
-                    setItems(data);
-                    localStorage.removeItem("cart");
-                }
-
-                if (localCart) {
-                    const data = JSON.parse(localCart);
-
-                    await Promise.all(
-                        data.map(async (item) => {
-                            const q = query(
-                                collection(db, "cart"),
-                                where("userId", "==", updatedUser.uid),
-                                where("productId", "==", item.productId)
-                            );
-
-                            const querySnapshot = await getDocs(q);
-
-                            if (querySnapshot.empty) {
-                                return addDoc(collection(db, "cart"), {
-                                    ...item,
-                                    userId: updatedUser.uid,
-                                });
-                            }
-                        })
-                    );
-
-                    setItems(data);
-                    localStorage.removeItem("cart");
-                }
-
                 const userDoc = await getDoc(doc(db, "users", updatedUser.uid));
 
                 if (userDoc.exists()) {
@@ -170,6 +127,7 @@ const Page = () => {
                 }
 
                 localStorage.removeItem("lastVerificationSent");
+                localStorage.removeItem("firstVerificationSent");
                 toast.success("Email verified successfully. Welcome!");
                 setTimeout(() => router.replace("/"), 100)
 
@@ -197,6 +155,7 @@ const Page = () => {
             return;
         }
     }, [isAuthReady, currentUser, router]);
+
     if (!isAuthReady || !currentUser) {
         return <FullPageLoader />;
     }

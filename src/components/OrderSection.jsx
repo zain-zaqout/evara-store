@@ -7,9 +7,9 @@ import { db } from "../lib/firebase";
 const OrderSection = () => {
 
   const { currentUser } = useAuth()
-  
+
   const initialState = {
-    data: [] ,
+    data: [],
     loading: false,
     error: null
   };
@@ -38,7 +38,7 @@ const OrderSection = () => {
     async function getData() {
       dispatch({ type: "LOADING" });
       try {
-        const q = query(collection(db, "orders"), where("orderId", "==", currentUser.uid))
+        const q = query(collection(db, "orders"), where("userId", "==", currentUser.uid))
         const getData = await getDocs(q)
         const orderData = getData.docs.map((doc) => {
           const data = doc.data();
@@ -48,7 +48,7 @@ const OrderSection = () => {
             date: data.date?.toDate ? data.date.toDate().toLocaleDateString() : "No Date"
           };
         })
-        
+
         dispatch({ type: "SUCCESS", val: orderData });
       } catch (error) {
         dispatch({ type: "ERROR", val: error.message });
@@ -90,17 +90,16 @@ const OrderSection = () => {
               {orders.data.map((order) => (
                 <tr key={order.id}>
                   <td className="border border-gray-300 px-4 py-2 font-semibold text-left">
-                    #{order.id.slice(0,4)}
+                    #{order.id.slice(0, 4)}
                   </td>
                   <td className="border border-gray-300 px-4 py-2 font-semibold text-gray-700 text-left">
                     {order.date}
                   </td>
                   <td
-                    className={`border border-gray-300 px-4 py-2 text-left font-semibold text-base ${
-                      order.status === "Complete"
+                    className={`border border-gray-300 px-4 py-2 text-left font-semibold text-base ${order.status === "Complete"
                         ? "text-green-700"
                         : "text-orange-600"
-                    }`}
+                      }`}
                   >
                     {order.status}
                   </td>

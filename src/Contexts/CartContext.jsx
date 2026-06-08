@@ -14,35 +14,76 @@ export const CartContext = ({ children }) => {
   const { currentUser } = useAuth()
 
   useEffect(() => {
-    if (currentUser?.emailVerified) {
-      const getData = async () => {
-        setLoading(true);
-        try {
+    async function handel() {
+      if (currentUser?.emailVerified && currentUser?.uid) {
+        await merageCart()
+      }
+      await getData()
+    }
+    handel()
+  }, [currentUser?.uid, currentUser?.emailVerified]);
+
+  const merageCart = async () => {
+
+    const local = localStorage.getItem("cart");
+    if (!local) return;
+
+    const localData = JSON.parse(local);
+
+    localStorage.removeItem("cart");
+
+    if (Array.isArray(localData) && localData.length > 0) {
+      await Promise.all(
+        localData.map(async (i) => {
           const q = query(
             collection(db, "cart"),
-            where("userId", "==", currentUser.uid)
+            where("userId", "==", currentUser.uid),
+            where("productId", "==", i.id)
           );
-          const Data = await getDocs(q);
-          const finleData = Data.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setItems(finleData);
-        } catch (error) {
-          toast.error(error.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-      getData();
+
+          const snap = await getDocs(q);
+
+          if (snap.empty) {
+            await addDoc(collection(db, "cart"), {
+              ...i,
+              userId: currentUser.uid,
+            });
+          }
+        })
+      );
+
+    }
+  };
+
+  const getData = async () => {
+    if (currentUser?.emailVerified) {
+      setLoading(true);
+      try {
+        const q = query(
+          collection(db, "cart"),
+          where("userId", "==", currentUser.uid)
+        );
+        const Data = await getDocs(q);
+        const finleData = Data.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setItems(finleData);
+        localStorage.removeItem("cart");
+
+      } catch {
+        toast.error("something went wrong");
+      } finally {
+        setLoading(false);
+      }
     } else {
       const local = localStorage.getItem("cart");
       if (local) {
         setItems(JSON.parse(local));
       }
       setLoading(false);
-    }
-  }, [currentUser?.uid]);
+    };
+  }
 
   const addToCart = async (product) => {
     const exi = Items.find((i) => i.productId === product.id);
@@ -67,8 +108,8 @@ export const CartContext = ({ children }) => {
     if (currentUser?.emailVerified) {
       try {
         await addDoc(collection(db, "cart"), newCart);
-      } catch (error) {
-        toast.error(error.message);
+      } catch {
+        toast.error("something went wrong");
         setItems(oldCart);
       }
     } else {
@@ -105,8 +146,8 @@ export const CartContext = ({ children }) => {
           );
           await Promise.all(deletePromises);
         }
-      } catch (error) {
-        toast.error(error.message);
+      } catch {
+        toast.error("something went wrong");
         setItems(oldCart);
       }
     } else {
@@ -143,9 +184,8 @@ export const CartContext = ({ children }) => {
         }
         const docId = querySnapshot.docs[0].id;
         await updateDoc(doc(db, "cart", docId), { que: itemToUpdate.que + 1 });
-      } catch (error) {
+      } catch {
         setItems(oldCart)
-        toast.error(error.message)
       }
     } else {
       localStorage.setItem("cart", JSON.stringify(newCart));
@@ -181,9 +221,8 @@ export const CartContext = ({ children }) => {
         }
         const docId = querySnapshot.docs[0].id;
         await updateDoc(doc(db, "cart", docId), { que: itemToUpdate.que - 1 });
-      } catch (error) {
+      } catch {
         setItems(oldCart)
-        toast.error(error.message)
       }
     } else {
       localStorage.setItem("cart", JSON.stringify(newCart));

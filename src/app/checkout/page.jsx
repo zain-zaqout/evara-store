@@ -36,7 +36,8 @@ const CheckOut = () => {
   async function addOrder() {
     try {
       const orderData = {
-        orderId: currentUser.uid,
+        orderId: Date.now().toString(),
+        userId: currentUser.uid,
         userName: billingName,
         email: billingEmail,
         address: {
@@ -44,7 +45,15 @@ const CheckOut = () => {
           city: billingCity,
           country: billingCountry,
         },
-        items: Items,
+        items: [
+          {
+            firsstImage: Items[0].firstImage,
+            id: Items[0].id,
+            productId: Items[0].productId,
+            price: Items[0].price,
+            que: Items[0].que,
+          }
+        ],
         date: serverTimestamp(),
         status: "Pending",
         total: Total,
