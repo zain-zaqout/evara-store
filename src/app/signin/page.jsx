@@ -61,7 +61,7 @@ const Page = () => {
             if (
                 code === "auth/popup-closed-by-user" ||
                 code === "auth/cancelled-popup-request" ||
-                error.message?.includes("Cross-Origin")
+                error?.message?.includes("Cross-Origin")
             ) {
                 return;
             }
