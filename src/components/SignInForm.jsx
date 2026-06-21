@@ -13,7 +13,7 @@ const SignInForm = ({ login, signup, loadingGoogle, loading, errorPreview }) => 
 
     return (
         <div className='w-full'>
-            <form className='w-full' onSubmit={(e) => {
+            <form className='w-full' noValidate onSubmit={(e) => {
                 e.preventDefault();
                 if (mode === "createAccount") {
                     signup();
@@ -32,7 +32,6 @@ const SignInForm = ({ login, signup, loadingGoogle, loading, errorPreview }) => 
                             ref={inputFocus}
                             placeholder="Full name"
                             value={Data?.user || ""}
-                            minLength={3}
                             maxLength={18}
                             onChange={(e) => dispatch({ type: "user", val: e.target.value })}
                         />
@@ -58,12 +57,11 @@ const SignInForm = ({ login, signup, loadingGoogle, loading, errorPreview }) => 
                         {errorPreview.email && (
                             <p className="text-red-500 text-xs flex items-center gap-1 mt-2 px-1 font-semibold">
                                 <AlertCircle className='w-4 h-4' />
-                                {errorPreview.email} {/* قراءة الخطأ الديناميكي هنا */}
+                                {errorPreview.email}
                             </p>
                         )}
                     </div>
 
-                    {/* حقل كلمة المرور */}
                     <div className="group w-full relative">
                         <Lock className={`${!errorPreview.password ? "group-hover:text-[#007f7b] focus-within:text-[#007f7b]" : "text-red-500"} absolute left-4 top-6 -translate-y-1/2 w-5 h-5 text-[#a1a1a1] transition-colors duration-200`} strokeWidth={2} />
                         <input
@@ -72,20 +70,18 @@ const SignInForm = ({ login, signup, loadingGoogle, loading, errorPreview }) => 
                             className={`${errorPreview.password ? "outline-2 outline-red-500" : "focus:border-none group-hover:outline-2 group-hover:outline-[#007f7b] focus:outline-2 focus:outline-[#007f7b]"} w-full h-12 pl-12 pr-4 rounded-[20px] outline outline-gray-300 bg-white text-[14.5px] placeholder:text-[#616b6a] transition-colors duration-300`}
                             placeholder="Password"
                             value={Data?.password || ""}
-                            minLength={8}
                             maxLength={30}
                             onChange={(e) => dispatch({ type: "password", val: e.target.value })}
                         />
                         {errorPreview.password && (
                             <p className="text-red-500 text-xs flex items-center gap-1 mt-2 px-1 font-semibold">
                                 <AlertCircle className='w-4 h-4' />
-                                {errorPreview.password} {/* قراءة الخطأ الديناميكي هنا */}
+                                {errorPreview.password}
                             </p>
                         )}
                     </div>
                 </div>
 
-                {/* قسم خيارات التذكر ونسيان كلمة المرور */}
                 <div className={`${mode === "createAccount" ? "hidden" : "flex"} justify-between items-center mt-4 mb-2 px-1`}>
                     <div className='flex items-center gap-2 select-none'>
                         <input
@@ -103,7 +99,6 @@ const SignInForm = ({ login, signup, loadingGoogle, loading, errorPreview }) => 
                     </Link>
                 </div>
 
-                {/* زر الإرسال الرئيسي */}
                 <button
                     disabled={loading || loadingGoogle}
                     className='text-white mt-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 bg-[#088179] hover:bg-[#005350] rounded-[20px] shadow-sm w-full h-12 text-sm font-bold duration-200 ease-in-out cursor-pointer'

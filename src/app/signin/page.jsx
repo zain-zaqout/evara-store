@@ -86,11 +86,10 @@ const Page = () => {
 
         let localErrors = {}
 
-
-        if (!emailValue || !emailRegex.test(emailValue)) {
+        if (!emailRegex.test(emailValue)) {
             localErrors.email = "Please enter a valid email address."
         }
-        if (passwordValue < 8) {
+        if (passwordValue.length < 8) {
             localErrors.password = "Password must be at least 8 characters long."
         }
         setError(localErrors)
@@ -158,7 +157,6 @@ const Page = () => {
         const emailValue = Data.email?.trim() || ""
 
         let localErrors = {}
-
 
         if (userValue.length < 3) {
             localErrors.name = "Please enter your full name."
@@ -265,12 +263,12 @@ const Page = () => {
 
     return (
         <main className='min-h-screen flex items-center justify-center '>
-            <div className='max-w-90 w-full flex flex-col items-center justify-center'>
+            <div className='max-w-90 max-[750px]:max-w-80 max-[350px]:max-w-72 w-full flex flex-col items-center justify-center'>
                 <div className='text-center'>
                     {mode === "createAccount" ? (
                         <>
                             <h1 className='uppercase text-[#088179] text-[13px] tracking-[0.2em]'>Get Started</h1>
-                            <h2 className='text-[32px]'>Create new account</h2>
+                            <h2 className='text-[32px] max-[420px]:text-[27px]'>Create new account</h2>
                         </>
                     ) : (
                         <>
