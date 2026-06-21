@@ -4,7 +4,7 @@ export function proxy(request) {
   const token = request.cookies.get("firebase_token")?.value;
   const { pathname } = request.nextUrl;
 
-  const publicPaths = ["/login", "/signup", "/verify-email"];
+  const publicPaths = ["/signin", "/verify-email", "/forgot-password"];
   const isPublicPath = publicPaths.includes(pathname);
 
   const protectedPaths = ["/checkout", "/profile"];
@@ -13,7 +13,7 @@ export function proxy(request) {
   );
 
   if (isProtectedPath && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/signin", request.url));
   }
 
   if (isPublicPath && token) {

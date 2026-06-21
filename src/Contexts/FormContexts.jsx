@@ -1,9 +1,13 @@
 "use client"
-import { createContext, useReducer, useContext } from "react";
+import { createContext, useReducer, useContext, useState } from "react";
+import { useEffect } from "react";
+import { useAuth } from "./AuthContext";
 
 export const Context = createContext();
 
 export const FormContexts = ({ children }) => {
+    const [mode, setMode] = useState("createAccount")
+    const { currentUser } = useAuth();
     const initialState = {
         user: "",
         email: "",
@@ -37,8 +41,14 @@ export const FormContexts = ({ children }) => {
 
     const [Data, dispatch] = useReducer(reducer, initialState);
 
+    useEffect(() => {
+        if (currentUser?.user && Data.user === "") {
+            dispatch({ type: "user", val: currentUser.user });
+        }
+    }, [currentUser]);
+
     return (
-        <Context.Provider value={{ Data, dispatch }}>
+        <Context.Provider value={{ Data, dispatch, mode, setMode }}>
             {children}
         </Context.Provider>
     )

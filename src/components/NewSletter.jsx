@@ -11,7 +11,7 @@ const Sign = () => {
   const { currentUser } = useAuth();
   const { setActive } = useCart()
 
-  if (path === "/signup" || path === "/login" || path === "/verify-email") return null
+  if (path === "/signin" || path === "/verify-email" || path === "/forgot-password") return null
 
   return (
     <>
@@ -81,7 +81,7 @@ const Sign = () => {
                   </p>
                 </div>
                 <div>
-                  <Link href="/signup">
+                  <Link href="/signin">
                     <button className="bg-gray-900 text-sm text-white font-semibold w-23 h-9 rounded-[3px] cursor-pointer select-none hover:bg-[#088179] duration-300">
                       Sign Up
                     </button>

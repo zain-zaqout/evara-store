@@ -6,15 +6,17 @@ import { usePathname } from "next/navigation";
 import { useCart } from "../Contexts/CartContext";
 import { useWishlist } from "../Contexts/WishlistContext";
 import { useRouter } from "next/navigation";
+import { useForm } from "../Contexts/FormContexts";
 
 const NavBar = () => {
   const { currentUser } = useAuth();
   const { Menu, setMenu } = useMenu();
   const { Items } = useCart();
   const { wishlis } = useWishlist();
+  const { setMode } = useForm()
 
   const pathNAme = usePathname();
-  const isAuthPage = ["/login", "/signup", "/verify-email"].includes(pathNAme.toLowerCase());
+  const isAuthPage = ["/signin", "/verify-email", "/forgot-password"].includes(pathNAme.toLowerCase());
   const isHome = pathNAme === "/";
   const isShop = pathNAme === "/shop";
   const isMyAccount = pathNAme === "/profile";
@@ -45,19 +47,11 @@ const NavBar = () => {
                 Shope
               </p>
             </Link>
-            <Link href={currentUser?.emailVerified && currentUser ? "/profile" : "/login"}>
+            <Link href={currentUser?.emailVerified && currentUser ? "/profile" : "/signin"} onClick={() => setMode("Signin")}>
               <p className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900">
                 {currentUser?.emailVerified ? "My Account" : "Login"}
               </p>
             </Link>
-            {/* <Link
-              href="/profile"
-              className={`${!currentUser?.emailVerified ? "hidden" : ""} ${isMyAccount ? "text-[#088179]" : ""}`}
-            >
-              <p className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900">
-                MyAcount
-              </p>
-            </Link> */}
           </nav>
           <div className="flex items-center gap-3">
             <div className="relative">
@@ -162,10 +156,13 @@ const NavBar = () => {
                 Shope
               </p>
             </Link>
-            <Link href="/login" className={`${currentUser?.emailVerified ? "hidden" : ""}`}>
+            <Link href="/signin" className={`${currentUser?.emailVerified ? "hidden" : ""}`}>
               <p
                 className="text-[17px] font-semibold hover:text-[#088179] duration-300 text-gray-900"
-                onClick={() => setMenu(false)}
+                onClick={() => {
+                  setMenu(false)
+                  setMode("Signin")
+                }}
               >
                 Login
               </p>

@@ -146,7 +146,7 @@ const Page = () => {
         if (!isAuthReady) return;
 
         if (!currentUser) {
-            router.replace("/login");
+            router.replace("/signin");
             return;
         }
 
@@ -165,8 +165,8 @@ const Page = () => {
 
             <div className="fixed top-0 left-0 mx-10 flex items-center py-5">
                 <button
-                    onClick={() => router.push("/")}
-                    className="flex items-center group gap-0.75 cursor-pointer duration-200 py-1 px-2.5 rounded-md"
+                    onClick={() => router.push("/signin")}
+                    className="flex items-center group gap-0.75 cursor-pointer duration-200 py-1 rounded-md"
                 >
                     <ArrowLeft size={16} className="text-gray-500 group-hover:text-slate-900 group-hover:-translate-x-1 duration-100" />
                     <span className="text-sm text-gray-500 group-hover:text-slate-900 duration-100">

@@ -15,7 +15,7 @@ import { auth, db } from "../lib/firebase";
 import { updateProfile } from "firebase/auth";
 const UpdateProfileSection = () => {
   const [Loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [cachedEmail, setCachedEmail] = useState("");
 
   const { currentUser, setCurrentUser } = useAuth();
   const { Data, dispatch } = useForm();
@@ -23,6 +23,9 @@ const UpdateProfileSection = () => {
   useEffect(() => {
     if (currentUser?.user && Data.user === "") {
       dispatch({ type: "user", val: currentUser.user });
+    }
+    if (currentUser?.email) {
+      setCachedEmail(currentUser.email);
     }
   }, [currentUser]);
 
@@ -65,20 +68,12 @@ const UpdateProfileSection = () => {
       toast.success("Profile updated successfully!");
 
       dispatch({ type: "user", val: "" });
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
+    } catch {
+      toast.error("An unexpected error occurred.")
     } finally {
       setLoading(false);
     }
   }
-
-  if (error)
-    return (
-      <p className="text-red-500 text-3xl font-semibold text-center mt-40">
-        {error}
-      </p>
-    );
 
   return (
     <>
@@ -109,7 +104,7 @@ const UpdateProfileSection = () => {
                   type="email"
                   readOnly
                   className="border border-gray-300 text-gray-600 bg-slate-50 w-full cursor-not-allowed focus:outline-none pl-3 py-1.5 placeholder:text-gray-400 placeholder:text-[15px] font-medium rounded"
-                  placeholder={currentUser?.email || ""}
+                  placeholder={cachedEmail}
                 />
                 <button
                   className="bg-[#088179] border-2 w-fit hover:text-[#088179] text-left hover:bg-white font-semibold text-white px-4.5 py-1.5 rounded-md duration-200 cursor-pointer"

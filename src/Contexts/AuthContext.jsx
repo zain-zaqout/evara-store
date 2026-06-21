@@ -7,9 +7,9 @@ import {
   useEffect,
 } from "react";
 import { auth, db } from "../lib/firebase";
-import { doc, getDoc, addDoc, collection } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { FullPageLoader } from "../components/FullPageLoader";
-import { setCookie } from "cookies-next";
+import { setCookie, deleteCookie } from "cookies-next";
 
 export const Context = createContext();
 
@@ -47,13 +47,16 @@ export const AuthContext = ({ children }) => {
 
           } else {
             setCurrentUser(user);
+            deleteCookie("firebase_token", { path: "/" });
           }
         } catch {
           setCurrentUser(user);
+          deleteCookie("firebase_token", { path: "/" });
         }
       } else {
         setCurrentUser(null);
         setaddressData(null);
+        deleteCookie("firebase_token", { path: "/" });
       }
       setIsAuthReady(true);
     });

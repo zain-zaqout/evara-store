@@ -19,7 +19,7 @@ const Hero = () => {
               Save more with coupons & up to 20% off
             </p>
             <Link href="/shop">
-              <button className="inline-block bg-[#088179] border-2 border-[#088179] px-7 h-[49px] rounded-sm font-bold transition-all duration-400 text-[#ffffff] text-sm hover:bg-transparent hover:text-[#088179] cursor-pointer mt-4 max-[800px]:h-10 max-[800px]:px-5">
+              <button className="inline-block bg-[#088179] border-2 border-[#088179] px-6 h-[46px] rounded-[7px] font-bold transition-all duration-400 text-[#ffffff] text-[14.25px] hover:bg-transparent hover:text-[#088179] cursor-pointer mt-4 max-[800px]:h-11 max-[800px]:px-5">
                 Shop Now
               </button>
             </Link>

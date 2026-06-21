@@ -6,9 +6,8 @@ import {
   User,
   Trash2,
   Loader2,
-  Lock,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import UpdateProfileSection from "../../components/UpdateProfileSection";
 import OrderSection from "../../components/OrderSection";
 import ShopingaddressSection from "../../components/ShopingAddresSection";
@@ -31,7 +30,6 @@ const Profile = () => {
     currentUser,
     setaddressData,
     setCurrentUser,
-    isAuthReady,
   } = useAuth();
   const { active, setActive, setItems } = useCart();
   const { setWishlis } = useWishlist()
@@ -143,15 +141,6 @@ const Profile = () => {
           >
             <MapPin size={18} />
             <span>My address</span>
-          </button>
-          <button
-            className={`w-full text-left px-3 py-3 font-semibold cursor-pointer border border-gray-200 flex items-center gap-2 ${active === "password" ? "text-white bg-[#088179]" : "text-gray-900"}`}
-            onClick={() => {
-              toast.info("Password change is under development by our support team. Coming soon!");
-            }}
-          >
-            <Lock size={18} />
-            <span>Change Password</span>
           </button>
           <button
             className={`w-full text-left px-3 py-3 font-semibold cursor-pointer border border-gray-200 flex items-center gap-2 ${active === "orders" ? "text-white bg-[#088179]" : "text-gray-900"}`}
